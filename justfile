@@ -11,20 +11,24 @@ start-icrc1:
 
 # Build with ICP token type
 build-icp-fe:
-  cd src/frontend && npm run build:icp
+  cd src/frontend && npm install && npm run build:icp
 
 # Build with ICRC1 token type
 build-icrc1-fe:
   cd src/frontend && VITE_TOKEN_SYMBOL=TICRC1 npm run build
 
-deploy-icp:
+deploy-icp-backend:
   dfx deploy testicp-ledger
   dfx deploy testicp-backend
+
+deploy-icp: deploy-icp-backend
   dfx deploy testicp-frontend
 
-deploy-icrc1:
+deploy-icrc1-backend:
   dfx deploy ticrc1-ledger
   dfx deploy ticrc1-backend
+
+deploy-icrc1: deploy-icrc1-backend
   dfx deploy ticrc1-frontend
 
 deploy-icrc1-mainnet:
@@ -47,5 +51,5 @@ setup-frontend-test:
   cd tests/frontend && npm install && npx playwright install
 
 # Run frontend test for ICP faucet
-test-frontend-icp: setup-frontend-test
+test-frontend-icp: setup-frontend-test build-icp-fe
   cd tests/frontend && npm run test:frontend

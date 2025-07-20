@@ -38,7 +38,7 @@ echo ""
 
 # Step 2: Deploy canisters
 echo -e "${YELLOW}📦 Deploying canisters...${NC}"
-if dfx deploy; then
+if just deploy-icrc1-backend; then
     echo -e "${GREEN}✅ Canisters deployed successfully${NC}"
 else
     echo -e "${RED}❌ Failed to deploy canisters${NC}"
