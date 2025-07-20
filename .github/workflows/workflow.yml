@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-20.04, macos-13 ]
+        os: [ ubuntu-24.04, macos-15 ]
 
     steps:
       - uses: actions/checkout@v4
@@ -35,15 +35,12 @@ jobs:
           rustup target add wasm32-unknown-unknown
 
       - name: Build
-        shell: bash
-        run: |
-          cargo build --release --all-targets
-          cargo build --release --bin build-utxos --bin main-state-builder --features=file_memory
+        run: cargo build --release --all-targets
         env:
           RUST_BACKTRACE: 1
 
   cargo-clippy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
@@ -61,19 +58,20 @@ jobs:
           rustup target add wasm32-unknown-unknown
           rustup component add clippy
 
-      - uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-targets -- -D warnings
+      - name: Run Clippy
+        run: cargo clippy --all-targets -- -D warnings
 
   rustfmt:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: Install Rust + Clippy
-        run: |
-          rustup update $RUST_VERSION --no-self-update
-          rustup default $RUST_VERSION
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-1
 
       - name: Install Rust + Rustfmt
         run: |
@@ -81,25 +79,23 @@ jobs:
           rustup default $RUST_VERSION
           rustup component add rustfmt
 
-      - uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
+      - name: Check formatting
+        run: cargo fmt --all -- --check
 
   shell-checks:
     name: ShellCheck
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v4
     - name: Run ShellCheck
-      uses: ludeeus/action-shellcheck@master
+      uses: ludeeus/action-shellcheck@2.0.0
       env:
         SHELLCHECK_OPTS: -e SC1090 -e SC2119 -e SC1091
 
   checks-pass:
     if: always()
     needs: [cargo-build, shell-checks, cargo-clippy, rustfmt]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Check all jobs passed
         if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
