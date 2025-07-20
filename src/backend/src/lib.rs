@@ -10,6 +10,8 @@ use icrc_ledger_types::icrc1::transfer::TransferArg as Icrc1TransferArg;
 use serde::Deserialize;
 use std::cell::RefCell;
 
+const NON_MINTER_FEE: u64 = 10_000;
+
 thread_local! {
     static STATE: RefCell<State> = RefCell::new(State::default());
 }
@@ -61,7 +63,7 @@ async fn transfer_icrc1(to_principal: Principal) {
             let fee = if state.is_mint {
                 Some(Nat::from(0u64))
             } else {
-                Some(Nat::from(10_000u64))
+                Some(Nat::from(NON_MINTER_FEE))
             };
 
             ic_cdk::call::Call::bounded_wait(state.ledger_canister, "icrc1_transfer")
@@ -100,7 +102,7 @@ async fn transfer_icp(to_account_identifier: String) {
     let fee = if state.is_mint {
         Tokens::from_e8s(0u64)
     } else {
-        Tokens::from_e8s(10_000u64)
+        Tokens::from_e8s(NON_MINTER_FEE)
     };
 
     let transfer_arg = IcpTransferArg {

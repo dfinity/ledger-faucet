@@ -45,7 +45,7 @@ dfx canister call ticrc1-backend transfer_icrc1 '(principal "uqqxf-5h777-77774-q
 Checking the balance:
 
 ```bash
-# Replace the principal with the principal you want the tokens to be sent to.
+# Replace the principal with the principal for which you want to check the balance of.
 dfx canister call ticrc1-ledger icrc1_balance_of '(record { owner = principal "uqqxf-5h777-77774-qaaaa-cai"})'
 ```
 
@@ -59,6 +59,6 @@ dfx canister call testicp-backend transfer_icp '("f0da8debe354b98d21be4fe41f0d5f
 Checking the balance:
 
 ```bash
-# Replace the account identifier with the account identifier you want the tokens to be sent to.
+# Replace the account identifier with the account identifier for which you want to check the balance of.
 dfx canister call testicp-ledger account_balance_dfx '(record { account = "f0da8debe354b98d21be4fe41f0d5fbe403763f22cc6f6b6850cc390d8b33e77"})'
 ```
