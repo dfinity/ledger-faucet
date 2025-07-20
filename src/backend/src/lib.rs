@@ -1,9 +1,12 @@
 use candid::types::number::Nat;
 use candid::{CandidType, Principal};
-use icrc_ledger_types::icrc1::account::Account;
-use icrc_ledger_types::icrc1::transfer::{TransferArg as Icrc1TransferArg};
-use ic_ledger_types::{AccountIdentifier, TransferArgs as IcpTransferArg, Tokens, Memo, Subaccount, TransferError, BlockIndex};
 use ic_cdk::call::Response;
+use ic_ledger_types::{
+    AccountIdentifier, BlockIndex, Memo, Subaccount, Tokens, TransferArgs as IcpTransferArg,
+    TransferError,
+};
+use icrc_ledger_types::icrc1::account::Account;
+use icrc_ledger_types::icrc1::transfer::TransferArg as Icrc1TransferArg;
 use serde::Deserialize;
 use std::cell::RefCell;
 
@@ -13,6 +16,7 @@ thread_local! {
 
 #[derive(Clone, CandidType, Deserialize, PartialEq)]
 enum LedgerType {
+    #[allow(clippy::upper_case_acronyms)]
     ICP,
     ICRC1,
 }
@@ -44,7 +48,7 @@ fn init(state: State) {
 /// Returns the account identifier of the canister.
 #[ic_cdk::query]
 async fn account_identifier() -> String {
-    AccountIdentifier::new(&ic_cdk::api::canister_self(), &Subaccount([0;32])).to_hex()
+    AccountIdentifier::new(&ic_cdk::api::canister_self(), &Subaccount([0; 32])).to_hex()
 }
 
 /// Transfers ICRC1 tokens to the specified principal.
@@ -90,7 +94,8 @@ async fn transfer_icp(to_account_identifier: String) {
         panic!("Ledger type must be ICP");
     }
 
-    let account_identifier = AccountIdentifier::from_hex(&to_account_identifier).expect("Invalid account identifier");
+    let account_identifier =
+        AccountIdentifier::from_hex(&to_account_identifier).expect("Invalid account identifier");
 
     let fee = if state.is_mint {
         Tokens::from_e8s(0u64)
@@ -106,10 +111,11 @@ async fn transfer_icp(to_account_identifier: String) {
         created_at_time: None,
         memo: Memo(0),
     };
-    
-    let result : Response = ic_cdk::call::Call::bounded_wait(state.ledger_canister, "transfer")
+
+    let result: Response = ic_cdk::call::Call::bounded_wait(state.ledger_canister, "transfer")
         .with_arg(transfer_arg)
-        .await.unwrap();
+        .await
+        .unwrap();
 
     let result: Result<BlockIndex, TransferError> = result.candid().unwrap();
     result.unwrap();
