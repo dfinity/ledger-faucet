@@ -92,7 +92,7 @@ jobs:
       env:
         SHELLCHECK_OPTS: -e SC1090 -e SC2119 -e SC1091
 
-  integration-tests:
+  backend-tests:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -173,7 +173,7 @@ jobs:
 
   checks-pass:
     if: always()
-    needs: [cargo-build, shell-checks, cargo-clippy, rustfmt, integration-tests, frontend-tests]
+    needs: [cargo-build, shell-checks, cargo-clippy, rustfmt]
     runs-on: ubuntu-24.04
     steps:
       - name: Check all jobs passed

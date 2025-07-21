@@ -41,8 +41,7 @@ deploy-icp-mainnet:
   dfx deploy testicp-backend --network ic --mode=reinstall
   dfx deploy testicp-frontend --network ic
 
-# Run all faucet tests (ICRC1 and ICP)
-test:
+test-backend:
   ./tests/test_icrc1.sh
   ./tests/test_icp.sh 
 
@@ -53,3 +52,12 @@ setup-frontend-test:
 # Run frontend test for ICP faucet
 test-frontend-icp: setup-frontend-test build-icp-fe
   cd tests/frontend && npm run test:frontend
+
+# Run frontend test for ICRC1 faucet
+test-frontend-icrc1: setup-frontend-test build-icrc1-fe
+  cd tests/frontend && npx playwright test icrc1-faucet.spec.ts
+
+# Run all frontend tests (both ICP and ICRC1)
+test-frontend: test-frontend-icrc1 test-frontend-icp
+
+test: test-backend test-frontend
