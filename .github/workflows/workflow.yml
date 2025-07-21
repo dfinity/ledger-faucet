@@ -123,7 +123,7 @@ jobs:
           just --version
 
       - name: Run integration tests
-        run: just test
+        run: just test-backend
 
   frontend-tests:
     runs-on: ubuntu-24.04
@@ -169,7 +169,7 @@ jobs:
           npx playwright install --with-deps
 
       - name: Run frontend tests
-        run: just test-frontend-icp
+        run: just test-frontend
 
   checks-pass:
     if: always()
