@@ -173,7 +173,7 @@ jobs:
 
   checks-pass:
     if: always()
-    needs: [cargo-build, shell-checks, cargo-clippy, rustfmt]
+    needs: [cargo-build, shell-checks, cargo-clippy, rustfmt, backend-tests, frontend-tests]
     runs-on: ubuntu-24.04
     steps:
       - name: Check all jobs passed
