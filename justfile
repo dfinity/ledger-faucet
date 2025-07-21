@@ -15,7 +15,7 @@ build-icp-fe:
 
 # Build with ICRC1 token type
 build-icrc1-fe:
-  cd src/frontend && VITE_TOKEN_SYMBOL=TICRC1 npm run build
+  cd src/frontend && npm install && VITE_TOKEN_SYMBOL=TICRC1 npm run build
 
 deploy-icp-backend:
   dfx deploy testicp-ledger

@@ -160,13 +160,9 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: 'tests/frontend/package.json'
-
-      - name: Install Playwright dependencies
-        run: |
-          cd tests/frontend
-          npm ci
-          npx playwright install --with-deps
+          cache-dependency-path: |
+            tests/frontend/package.json
+            src/frontend/package.json
 
       - name: Run frontend tests
         run: just test-frontend
