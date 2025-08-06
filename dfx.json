@@ -34,7 +34,7 @@
         "testicp-backend"
       ],
       "source": [
-        "src/frontend/dist"
+        "src/frontend/dist/icp"
       ],
       "build": "just build-icp-fe",
       "type": "assets",
@@ -46,7 +46,7 @@
         "ticrc1-backend"
       ],
       "source": [
-        "src/frontend/dist"
+        "src/frontend/dist/icrc1"
       ],
       "build": "just build-icrc1-fe",
       "type": "assets",
