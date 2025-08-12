@@ -16,13 +16,29 @@ This project consists of multiple canisters that work together to provide a toke
 
 ## Quick Start
 
-### 1. Start Local IC Replica
+### 1. Install Development Tools
+
+First, install mise for managing development tool versions:
+
+```bash
+# Install mise (if not already installed)
+curl https://mise.run | sh
+```
+
+Then install the required tools (npm and just):
+
+```bash
+# Install tools specified in mise.toml
+mise install
+```
+
+### 2. Start Local IC Replica
 
 ```bash
 dfx start --background
 ```
 
-### 2. Deploy Canisters
+### 3. Deploy Canisters
 
 ```bash
 # Deploy all canisters
@@ -33,7 +49,7 @@ This will deploy:
 - Test ledger canisters with the faucet backend set as the minting account.
 - Faucet backend canisters connected to their respective ledgers
 
-### 3. Request Test Tokens
+### 4. Request Test Tokens
 
 #### For ICRC1 Tokens
 

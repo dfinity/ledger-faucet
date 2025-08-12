@@ -1,0 +1,16 @@
+{
+  "name": "ledger-faucet-tests",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test:frontend": "playwright test",
+    "test:frontend:headed": "playwright test --headed",
+    "playwright:install": "playwright install"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.1.3"
+  }
+} 

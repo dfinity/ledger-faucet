@@ -92,7 +92,7 @@ jobs:
       env:
         SHELLCHECK_OPTS: -e SC1090 -e SC2119 -e SC1091
 
-  integration-tests:
+  backend-tests:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -123,11 +123,53 @@ jobs:
           just --version
 
       - name: Run integration tests
-        run: just test
+        run: just test-backend
+
+  frontend-tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-1
+
+      - name: Install Rust
+        run: |
+          rustup update $RUST_VERSION --no-self-update
+          rustup default $RUST_VERSION
+          rustup target add wasm32-unknown-unknown
+
+      - name: Install DFX
+        run: |
+          wget https://github.com/dfinity/sdk/releases/download/$DFX_VERSION/dfx-$DFX_VERSION-x86_64-linux.tar.gz
+          tar -xzf dfx-$DFX_VERSION-x86_64-linux.tar.gz
+          sudo mv dfx /usr/local/bin/dfx
+          dfx --version
+
+      - name: Install Just
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+          just --version
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: |
+            tests/frontend/package.json
+            src/frontend/package.json
+
+      - name: Run frontend tests
+        run: just test-frontend
 
   checks-pass:
     if: always()
-    needs: [cargo-build, shell-checks, cargo-clippy, rustfmt, integration-tests]
+    needs: [cargo-build, shell-checks, cargo-clippy, rustfmt, backend-tests, frontend-tests]
     runs-on: ubuntu-24.04
     steps:
       - name: Check all jobs passed

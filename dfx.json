@@ -27,6 +27,31 @@
       "candid": "./src/backend/backend.did",
       "init_arg": "(record { ledger_canister = principal \"3jkp5-oyaaa-aaaaj-azwqa-cai\"; ledger_type = variant { ICRC1 }; is_mint = true; })",
       "specified_id": "rmxgg-6iaaa-aaaac-qa7xa-cai"
+    },
+
+    "testicp-frontend": {
+      "dependencies": [
+        "testicp-backend"
+      ],
+      "source": [
+        "src/frontend/dist/icp"
+      ],
+      "build": "just build-icp-fe",
+      "type": "assets",
+      "workspace": "frontend",
+      "specified_id": "nqoci-rqaaa-aaaap-qp53q-cai"
+    },
+    "ticrc1-frontend": {
+      "dependencies": [
+        "ticrc1-backend"
+      ],
+      "source": [
+        "src/frontend/dist/icrc1"
+      ],
+      "build": "just build-icrc1-fe",
+      "type": "assets",
+      "workspace": "frontend",
+      "specified_id": "pwwqf-yaaaa-aaaap-qp5wq-cai"
     }
   },
   "defaults": {
