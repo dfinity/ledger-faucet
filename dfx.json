@@ -15,6 +15,9 @@
       "specified_id": "3jkp5-oyaaa-aaaaj-azwqa-cai"
     },
     "testicp-backend": {
+      "dependencies": [
+        "testicp-ledger"
+      ],
       "type": "rust",
       "package": "backend",
       "candid": "./src/backend/backend.did",
@@ -22,6 +25,9 @@
       "specified_id": "ucua5-2qaaa-aaaao-qkeia-cai"
     },
     "ticrc1-backend": {
+      "dependencies": [
+        "ticrc1-ledger"
+      ],
       "type": "rust",
       "package": "backend",
       "candid": "./src/backend/backend.did",
@@ -36,7 +42,7 @@
       "source": [
         "src/frontend/dist/icp"
       ],
-      "build": "just build-icp-fe",
+      "build": "cd src/frontend && npm install && npm run build:icp",
       "type": "assets",
       "workspace": "frontend",
       "specified_id": "nqoci-rqaaa-aaaap-qp53q-cai"
@@ -48,7 +54,7 @@
       "source": [
         "src/frontend/dist/icrc1"
       ],
-      "build": "just build-icrc1-fe",
+      "build": "cd src/frontend && npm install && npm run build:icrc1",
       "type": "assets",
       "workspace": "frontend",
       "specified_id": "pwwqf-yaaaa-aaaap-qp5wq-cai"
