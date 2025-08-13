@@ -1,6 +1,7 @@
 target
 .dfx
 .env
+.idea
 dist
 node_modules
 playwright-report/
