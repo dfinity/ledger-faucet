@@ -109,7 +109,7 @@ The recommended workflow is to **first create a beta release** for testing, then
 ### Release Artifacts
 
 Each release includes:
-- **Backend WASM file**: `ledger-faucet-backend.wasm` (works for both ICP and ICRC1)
+- **Backend Wasm file**: `ledger-faucet-backend.wasm` (works for both ICP and ICRC1)
 - **Frontend assets**: `testicp-frontend-assets.tar.gz`, `ticrc1-frontend-assets.tar.gz`
 
 These artifacts can be used directly for deployment to production environments.
