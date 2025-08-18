@@ -117,10 +117,10 @@ jobs:
           sudo mv dfx /usr/local/bin/dfx
           dfx --version
 
-      - name: Install Just
-        run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
-          just --version
+      - name: Install tools via mise
+        uses: jdx/mise-action@v2
+        with:
+          cache: true
 
       - name: Run integration tests
         run: just test-backend
@@ -150,19 +150,10 @@ jobs:
           sudo mv dfx /usr/local/bin/dfx
           dfx --version
 
-      - name: Install Just
-        run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
-          just --version
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Install tools via mise
+        uses: jdx/mise-action@v2
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: |
-            tests/frontend/package.json
-            src/frontend/package.json
+          cache: true
 
       - name: Run frontend tests
         run: just test-frontend

@@ -1,0 +1,142 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers on version tags like v1.0.0, v2.1.3, etc.
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Test version (e.g., 0.0.1-test)'
+        required: true
+        default: '0.0.1-test'
+      create_release:
+        description: 'Create actual GitHub release'
+        required: true
+        default: false
+        type: boolean
+
+env:
+  RUST_VERSION: 1.88.0
+  DFX_VERSION: 0.28.0
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write  # Required for creating releases
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+            ~/.dfx
+          key: ${{ runner.os }}-release-${{ hashFiles('**/Cargo.lock') }}-${{ env.DFX_VERSION }}
+
+      - name: Install Rust
+        run: |
+          rustup update $RUST_VERSION --no-self-update
+          rustup default $RUST_VERSION
+          rustup target add wasm32-unknown-unknown
+
+      - name: Install DFX
+        run: |
+          wget https://github.com/dfinity/sdk/releases/download/$DFX_VERSION/dfx-$DFX_VERSION-x86_64-linux.tar.gz
+          tar -xzf dfx-$DFX_VERSION-x86_64-linux.tar.gz
+          sudo mv dfx /usr/local/bin/dfx
+          dfx --version
+
+      - name: Install tools via mise
+        uses: jdx/mise-action@v2
+        with:
+          cache: true
+
+      - name: Build backend canisters
+        run: |
+          # Build all backend canisters
+          just build testicp-backend
+          just build ticrc1-backend
+
+      - name: Build frontend canisters
+        run: |
+          # Build frontend canisters
+          just build testicp-frontend
+          just build ticrc1-frontend
+
+      - name: Create release artifacts directory
+        run: mkdir -p release-artifacts
+
+      - name: Copy WASM files
+        run: |
+          # Copy backend WASM files
+          cp .dfx/local/canisters/testicp-backend/testicp-backend.wasm release-artifacts/
+          cp .dfx/local/canisters/ticrc1-backend/ticrc1-backend.wasm release-artifacts/
+          
+          # Copy frontend assets (these are typically in the dist directory after build)
+          if [ -d ".dfx/local/canisters/testicp-frontend/assets" ]; then
+            tar -czf release-artifacts/testicp-frontend-assets.tar.gz -C .dfx/local/canisters/testicp-frontend assets
+          fi
+          if [ -d ".dfx/local/canisters/ticrc1-frontend/assets" ]; then
+            tar -czf release-artifacts/ticrc1-frontend-assets.tar.gz -C .dfx/local/canisters/ticrc1-frontend assets
+          fi
+
+      - name: Generate checksums
+        run: |
+          cd release-artifacts
+          sha256sum * > checksums.sha256
+
+      - name: Extract version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "VERSION=v${{ inputs.version }}" >> $GITHUB_OUTPUT
+            echo "IS_MANUAL=true" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+            echo "IS_MANUAL=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload artifacts for manual testing
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.create_release == false }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts-${{ inputs.version }}
+          path: release-artifacts/
+          retention-days: 7
+
+      - name: Create release
+        if: ${{ github.event_name == 'push' || inputs.create_release == true }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.VERSION }}
+          name: Release ${{ steps.version.outputs.VERSION }}
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.VERSION, '-') }}
+          generate_release_notes: true
+          files: |
+            release-artifacts/*
+          body: |
+            ## Token Faucet Release ${{ steps.version.outputs.VERSION }}
+            
+            This release contains the following artifacts:
+            
+            ### Backend Canisters (WASM files)
+            - `testicp-backend.wasm` - TESTICP faucet backend canister
+            - `ticrc1-backend.wasm` - TICRC1 faucet backend canister
+            
+            ### Frontend Assets
+            - `testicp-frontend-assets.tar.gz` - TESTICP frontend assets
+            - `ticrc1-frontend-assets.tar.gz` - TICRC1 frontend assets
+            
+            ### Verification
+            - `checksums.sha256` - SHA256 checksums for all artifacts
+            
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
