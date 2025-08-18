@@ -60,11 +60,10 @@ jobs:
         with:
           cache: true
 
-      - name: Build backend canisters
+      - name: Build backend canister
         run: |
-          # Build all backend canisters
+          # Build backend canister (same WASM works for both ICP and ICRC1)
           just build testicp-backend
-          just build ticrc1-backend
 
       - name: Build frontend canisters
         run: |
@@ -77,9 +76,8 @@ jobs:
 
       - name: Copy WASM files
         run: |
-          # Copy backend WASM files
-          cp .dfx/local/canisters/testicp-backend/testicp-backend.wasm release-artifacts/
-          cp .dfx/local/canisters/ticrc1-backend/ticrc1-backend.wasm release-artifacts/
+          # Copy backend WASM file (both backends use the same code)
+          cp .dfx/local/canisters/testicp-backend/testicp-backend.wasm release-artifacts/ledger-faucet-backend.wasm
 
       - name: Package frontend assets
         run: |
@@ -149,8 +147,7 @@ jobs:
             - Run: [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
             
             ### Test Artifacts Included:
-            - `testicp-backend.wasm` - TESTICP faucet backend canister
-            - `ticrc1-backend.wasm` - TICRC1 faucet backend canister  
+            - `ledger-faucet-backend.wasm` - Faucet backend canister (works for both ICP and ICRC1)
             - `testicp-frontend-assets.tar.gz` - TESTICP frontend assets
             - `ticrc1-frontend-assets.tar.gz` - TICRC1 frontend assets
             - `checksums.sha256` - SHA256 checksums for verification
@@ -171,9 +168,8 @@ jobs:
           body: |
             This release contains the following artifacts:
             
-            ### Backend Canisters (WASM files)
-            - `testicp-backend.wasm` - TESTICP faucet backend canister
-            - `ticrc1-backend.wasm` - TICRC1 faucet backend canister
+            ### Backend Canister (WASM file)
+            - `ledger-faucet-backend.wasm` - Faucet backend canister (works for both ICP and ICRC1)
             
             ### Frontend Assets
             - `testicp-frontend-assets.tar.gz` - TESTICP frontend assets
