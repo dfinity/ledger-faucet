@@ -98,11 +98,6 @@ jobs:
             ls -la src/frontend/dist/ || echo "dist directory doesn't exist"
           fi
 
-      - name: Generate checksums
-        run: |
-          cd release-artifacts
-          sha256sum * > checksums.sha256
-
       - name: Extract version
         id: version
         run: |
@@ -113,8 +108,8 @@ jobs:
             echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
             echo "IS_MANUAL=false" >> $GITHUB_OUTPUT
           else
-            # Branch push - use test version
-            echo "VERSION=v0.0.1-test-$(date +%s)" >> $GITHUB_OUTPUT
+            # Branch push - use beta version for realistic testing
+            echo "VERSION=v1.0.0-beta.1" >> $GITHUB_OUTPUT
             echo "IS_MANUAL=false" >> $GITHUB_OUTPUT
           fi
 
@@ -131,28 +126,27 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.VERSION }}
-          name: "🧪 Test Release ${{ steps.version.outputs.VERSION }}"
+          name: "Release ${{ steps.version.outputs.VERSION }}"
           draft: false
           prerelease: true
           generate_release_notes: true
           files: |
             release-artifacts/*
           body: |
-            ## 🧪 Test Release ${{ steps.version.outputs.VERSION }}
+            ## Token Faucet Release ${{ steps.version.outputs.VERSION }}
             
-            **This is a TEST PRERELEASE created for testing the release workflow.**
+            This release contains the following artifacts:
             
-            - Branch: `${{ github.ref_name }}`
-            - Commit: `${{ github.sha }}`
-            - Run: [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-            
-            ### Test Artifacts Included:
+            ### Backend Canister (WASM file)
             - `ledger-faucet-backend.wasm` - Faucet backend canister (works for both ICP and ICRC1)
+            
+            ### Frontend Assets
             - `testicp-frontend-assets.tar.gz` - TESTICP frontend assets
             - `ticrc1-frontend-assets.tar.gz` - TICRC1 frontend assets
-            - `checksums.sha256` - SHA256 checksums for verification
             
-            **⚠️ This release will be deleted after testing!**
+            ---
+            
+            **🧪 Note: This is a test release created from branch `${{ github.ref_name }}` and will be deleted after testing.**
 
       - name: Create release
         if: ${{ github.ref_type == 'tag' || inputs.create_release == true }}
@@ -174,9 +168,6 @@ jobs:
             ### Frontend Assets
             - `testicp-frontend-assets.tar.gz` - TESTICP frontend assets
             - `ticrc1-frontend-assets.tar.gz` - TICRC1 frontend assets
-            
-            ### Verification
-            - `checksums.sha256` - SHA256 checksums for all artifacts
             
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

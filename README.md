@@ -89,7 +89,7 @@ The recommended workflow is to **first create a beta release** for testing, then
 
 #### Step 1: Create Beta Release for Testing
 
-1. **Ensure your changes are merged to main** and all tests pass
+1. **Ensure all changes are merged to main** and all tests pass
 2. **Create a beta release**:
    ```bash
    ./scripts/create-release.sh 1.0.0-beta.1
@@ -106,27 +106,10 @@ The recommended workflow is to **first create a beta release** for testing, then
    - This creates the **official release** marked as "latest" on GitHub
    - Use this for production deployments
 
-The GitHub Actions workflow will automatically:
-- Build all backend canisters (WASM files)
-- Build all frontend assets  
-- Create a GitHub release with all artifacts
-- Generate checksums for verification
-- Mark releases with `-` as prereleases (e.g., `v1.0.0-beta.1`)
-- Mark releases without `-` as latest stable (e.g., `v1.0.0`)
-
-### Version Naming
-
-Use [semantic versioning](https://semver.org/):
-- `v1.0.0` - Major release
-- `v1.1.0` - Minor release (new features)
-- `v1.0.1` - Patch release (bug fixes)
-- `v1.0.0-beta.1` - Pre-release (marked as prerelease on GitHub)
-
 ### Release Artifacts
 
 Each release includes:
-- **Backend WASM files**: `testicp-backend.wasm`, `ticrc1-backend.wasm`
+- **Backend WASM file**: `ledger-faucet-backend.wasm` (works for both ICP and ICRC1)
 - **Frontend assets**: `testicp-frontend-assets.tar.gz`, `ticrc1-frontend-assets.tar.gz`
-- **Checksums**: `checksums.sha256` for artifact verification
 
 These artifacts can be used directly for deployment to production environments.
