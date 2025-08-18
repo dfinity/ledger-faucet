@@ -80,13 +80,24 @@ jobs:
           # Copy backend WASM files
           cp .dfx/local/canisters/testicp-backend/testicp-backend.wasm release-artifacts/
           cp .dfx/local/canisters/ticrc1-backend/ticrc1-backend.wasm release-artifacts/
-          
-          # Copy frontend assets (these are typically in the dist directory after build)
-          if [ -d ".dfx/local/canisters/testicp-frontend/assets" ]; then
-            tar -czf release-artifacts/testicp-frontend-assets.tar.gz -C .dfx/local/canisters/testicp-frontend assets
+
+      - name: Package frontend assets
+        run: |
+          # Package frontend build output
+          if [ -d "src/frontend/dist/icp" ]; then
+            tar -czf release-artifacts/testicp-frontend-assets.tar.gz -C src/frontend/dist icp
+            echo "✅ Packaged testicp-frontend assets"
+          else
+            echo "❌ testicp-frontend dist directory not found"
+            ls -la src/frontend/dist/ || echo "dist directory doesn't exist"
           fi
-          if [ -d ".dfx/local/canisters/ticrc1-frontend/assets" ]; then
-            tar -czf release-artifacts/ticrc1-frontend-assets.tar.gz -C .dfx/local/canisters/ticrc1-frontend assets
+          
+          if [ -d "src/frontend/dist/icrc1" ]; then
+            tar -czf release-artifacts/ticrc1-frontend-assets.tar.gz -C src/frontend/dist icrc1
+            echo "✅ Packaged ticrc1-frontend assets"
+          else
+            echo "❌ ticrc1-frontend dist directory not found"
+            ls -la src/frontend/dist/ || echo "dist directory doesn't exist"
           fi
 
       - name: Generate checksums
@@ -158,8 +169,6 @@ jobs:
           files: |
             release-artifacts/*
           body: |
-            ## Token Faucet Release ${{ steps.version.outputs.VERSION }}
-            
             This release contains the following artifacts:
             
             ### Backend Canisters (WASM files)
