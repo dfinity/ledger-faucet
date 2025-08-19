@@ -12,7 +12,6 @@ on:
         default: '1.0.0-beta.1'
 
 env:
-  RUST_VERSION: 1.88.0
   DFX_VERSION: 0.28.0
 
 jobs:
@@ -35,11 +34,13 @@ jobs:
             ~/.dfx
           key: ${{ runner.os }}-release-${{ hashFiles('**/Cargo.lock') }}-${{ env.DFX_VERSION }}
 
-      - name: Install Rust
-        run: |
-          rustup update $RUST_VERSION --no-self-update
-          rustup default $RUST_VERSION
-          rustup target add wasm32-unknown-unknown
+      - name: Install tools via mise
+        uses: jdx/mise-action@v2
+        with:
+          cache: true
+
+      - name: Add Rust Wasm target
+        run: rustup target add wasm32-unknown-unknown
 
       - name: Install DFX
         run: |
@@ -48,14 +49,9 @@ jobs:
           sudo mv dfx /usr/local/bin/dfx
           dfx --version
 
-      - name: Install tools via mise
-        uses: jdx/mise-action@v2
-        with:
-          cache: true
-
       - name: Build backend canister
         run: |
-          # Build backend canister (same WASM works for both ICP and ICRC1)
+          # Build backend canister (same Wasm works for both ICP and ICRC1)
           just build testicp-backend
 
       - name: Build frontend canisters
@@ -67,9 +63,9 @@ jobs:
       - name: Create release artifacts directory
         run: mkdir -p release-artifacts
 
-      - name: Copy WASM files
+      - name: Copy Wasm files
         run: |
-          # Copy backend WASM file (both backends use the same code)
+          # Copy backend Wasm file (both backends use the same code)
           cp .dfx/local/canisters/testicp-backend/testicp-backend.wasm release-artifacts/ledger-faucet-backend.wasm
 
       - name: Package frontend assets
@@ -113,7 +109,7 @@ jobs:
           body: |
             This release contains the following artifacts:
             
-            ### Backend Canister (WASM file)
+            ### Backend Canister (Wasm file)
             - `ledger-faucet-backend.wasm` - Faucet backend canister (works for both ICP and ICRC1)
             
             ### Frontend Assets
