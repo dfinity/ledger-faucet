@@ -78,3 +78,38 @@ Checking the balance:
 # Replace the account identifier with the account identifier for which you want to check the balance of.
 dfx canister call testicp-ledger account_balance_dfx '(record { account = "f0da8debe354b98d21be4fe41f0d5fbe403763f22cc6f6b6850cc390d8b33e77"})'
 ```
+
+## Creating Releases
+
+This repository uses automated GitHub releases. When you push a git tag, it automatically builds all artifacts and creates a GitHub release.
+
+### Release Process
+
+The recommended workflow is to **first create a beta release** for testing, then promote to a stable release:
+
+#### Step 1: Create Beta Release for Testing
+
+1. **Ensure all changes are merged to main** and all tests pass
+2. **Create a beta release**:
+   ```bash
+   ./scripts/create-release.sh 1.0.0-beta.1
+   ```
+   - This creates a **prerelease** on GitHub (not marked as "latest")
+   - Use this for testing in staging/development environments
+
+#### Step 2: Promote to Stable Release
+
+3. **After testing the beta**, create the stable release:
+   ```bash
+   ./scripts/create-release.sh 1.0.0
+   ```
+   - This creates the **official release** marked as "latest" on GitHub
+   - Use this for production deployments
+
+### Release Artifacts
+
+Each release includes:
+- **Backend Wasm file**: `ledger-faucet-backend.wasm` (works for both ICP and ICRC1)
+- **Frontend assets**: `testicp-frontend-assets.tar.gz`, `ticrc1-frontend-assets.tar.gz`
+
+These artifacts can be used directly for deployment to production environments.

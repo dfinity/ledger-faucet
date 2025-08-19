@@ -9,27 +9,22 @@ start-icp:
 start-icrc1:
   cd src/frontend && VITE_TOKEN_SYMBOL=TICRC1 npm run start
 
-# Build with ICP token type
-build-icp-fe:
-  cd src/frontend && npm install && npm run build:icp
+build canister:
+  dfx build {{canister}} --check
 
-# Build with ICRC1 token type
-build-icrc1-fe:
-  cd src/frontend && npm install && VITE_TOKEN_SYMBOL=TICRC1 npm run build:icrc1
-
-deploy-icp-backend:
-  dfx deploy testicp-ledger
-  dfx deploy testicp-backend
-
-deploy-icp: deploy-icp-backend
-  dfx deploy testicp-frontend
-
-deploy-icrc1-backend:
-  dfx deploy ticrc1-ledger
-  dfx deploy ticrc1-backend
-
-deploy-icrc1: deploy-icrc1-backend
-  dfx deploy ticrc1-frontend
+# Deploy frontend (usage: just deploy icp OR just deploy icrc1)
+deploy token_type:
+  #!/usr/bin/env bash
+  if [ "{{token_type}}" = "icp" ]; then
+    dfx deploy testicp-frontend
+  elif [ "{{token_type}}" = "icrc1" ]; then
+    dfx deploy ticrc1-frontend
+  else
+    echo "Error: Please specify 'icp' or 'icrc1'"
+    echo "Usage: just deploy icp"
+    echo "       just deploy icrc1"
+    exit 1
+  fi
 
 deploy-icrc1-mainnet:
   # NOTE: You need to manually set is_mint to false in the backend canister before deploying
@@ -50,11 +45,11 @@ setup-frontend-test:
   cd tests/frontend && npm install && npx playwright install
 
 # Run frontend test for ICP faucet
-test-frontend-icp: setup-frontend-test build-icp-fe
+test-frontend-icp: setup-frontend-test (build "testicp-frontend")
   cd tests/frontend && npm run test:frontend
 
 # Run frontend test for ICRC1 faucet
-test-frontend-icrc1: setup-frontend-test build-icrc1-fe
+test-frontend-icrc1: setup-frontend-test (build "ticrc1-frontend")
   cd tests/frontend && npx playwright test icrc1-faucet.spec.ts
 
 # Run all frontend tests (both ICP and ICRC1)

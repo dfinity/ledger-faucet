@@ -38,7 +38,7 @@ echo ""
 
 # Step 2: Deploy canisters
 echo -e "${YELLOW}📦 Deploying canisters...${NC}"
-if just deploy-icp-backend; then
+if dfx deploy testicp-backend; then
     echo -e "${GREEN}✅ Canisters deployed successfully${NC}"
 else
     echo -e "${RED}❌ Failed to deploy canisters${NC}"
