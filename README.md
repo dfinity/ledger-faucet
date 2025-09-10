@@ -42,7 +42,8 @@ dfx start --background
 
 ```bash
 # Deploy all canisters
-dfx deploy
+just deploy testicp
+just deploy ticrc1
 ```
 
 This will deploy:

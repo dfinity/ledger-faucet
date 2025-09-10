@@ -15,10 +15,10 @@
       "specified_id": "3jkp5-oyaaa-aaaaj-azwqa-cai"
     },
     "testicp": {
-      "type": "rust",
-      "package": "backend",
+      "type": "custom",
       "candid": "./src/backend/backend.did",
       "init_arg": "(record { ledger_canister = principal \"xafvr-biaaa-aaaai-aql5q-cai\"; ledger_type = variant { ICP }; is_mint = true; })",
+      "wasm": "./target/wasm32-unknown-unknown/release/backend.wasm",
       "specified_id": "nqoci-rqaaa-aaaap-qp53q-cai"
     },
     "ticrc1": {

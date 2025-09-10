@@ -6,20 +6,27 @@ start-icp:
 start-icrc1:
   cd src/frontend && VITE_TOKEN_SYMBOL=TICRC1 npm run start
 
-build canister:
-  dfx build {{canister}} --check
-
-# Deploy frontend (usage: just deploy icp OR just deploy icrc1)
+# Deploy a specific token
 deploy token_type:
   #!/usr/bin/env bash
   if [ "{{token_type}}" = "testicp" ]; then
     # Build frontend.
     cd src/frontend && VITE_TOKEN_SYMBOL=TESTICP npm run build:icp
+
+    # Build backend.
+    cargo build --target wasm32-unknown-unknown --release --features frontend
+
+    # Deploy canisters
     dfx deploy testicp-ledger
     dfx deploy testicp --mode=reinstall -y
   elif [ "{{token_type}}" = "ticrc1" ]; then
     # Build frontend.
     cd src/frontend && VITE_TOKEN_SYMBOL=TICRC1 npm run build:icrc1
+
+    # Build backend.
+    cargo build --target wasm32-unknown-unknown --release --features frontend
+
+    # Deploy canisters
     dfx deploy ticrc1-ledger
     dfx deploy ticrc1 --mode=reinstall -y
   else

@@ -1,7 +1,6 @@
 use candid::types::number::Nat;
 use candid::{CandidType, Principal};
 use ic_cdk::call::Response;
-use ic_http_certification::{HttpRequest, HttpResponse};
 use ic_ledger_types::{
     AccountIdentifier, BlockIndex, Memo, Subaccount, Tokens, TransferArgs as IcpTransferArg,
     TransferError,
@@ -11,6 +10,7 @@ use icrc_ledger_types::icrc1::transfer::TransferArg as Icrc1TransferArg;
 use serde::Deserialize;
 use std::cell::RefCell;
 
+#[cfg(feature = "frontend")]
 mod assets;
 
 const NON_MINTER_FEE: u64 = 10_000;
@@ -49,6 +49,7 @@ fn init(state: State) {
         *s.borrow_mut() = state;
     });
 
+    #[cfg(feature = "frontend")]
     assets::certify_all_assets();
 }
 
@@ -129,7 +130,8 @@ async fn transfer_icp(to_account_identifier: String) {
 }
 
 /// Serves frontend assets.
+#[cfg(feature = "frontend")]
 #[ic_cdk::query]
-fn http_request(req: HttpRequest) -> HttpResponse {
+fn http_request(req: ic_http_certification::HttpRequest) -> ic_http_certification::HttpResponse {
     assets::serve_asset(&req)
 }
