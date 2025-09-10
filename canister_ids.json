@@ -1,14 +1,8 @@
 {
-    "testicp-backend": {
-        "ic": "ucua5-2qaaa-aaaao-qkeia-cai"
-    },
-    "testicp-frontend": {
+    "testicp": {
         "ic": "nqoci-rqaaa-aaaap-qp53q-cai"
     },
-    "ticrc1-backend": {
-        "ic": "rmxgg-6iaaa-aaaac-qa7xa-cai"
-    },
-    "ticrc1-frontend": {
+    "ticrc1": {
         "ic": "pwwqf-yaaaa-aaaap-qp5wq-cai"
     }
 }

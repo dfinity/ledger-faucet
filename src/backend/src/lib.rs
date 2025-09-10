@@ -1,6 +1,7 @@
 use candid::types::number::Nat;
 use candid::{CandidType, Principal};
 use ic_cdk::call::Response;
+use ic_http_certification::{HttpRequest, HttpResponse};
 use ic_ledger_types::{
     AccountIdentifier, BlockIndex, Memo, Subaccount, Tokens, TransferArgs as IcpTransferArg,
     TransferError,
@@ -9,6 +10,8 @@ use icrc_ledger_types::icrc1::account::Account;
 use icrc_ledger_types::icrc1::transfer::TransferArg as Icrc1TransferArg;
 use serde::Deserialize;
 use std::cell::RefCell;
+
+mod assets;
 
 const NON_MINTER_FEE: u64 = 10_000;
 
@@ -45,6 +48,8 @@ fn init(state: State) {
     STATE.with(|s| {
         *s.borrow_mut() = state;
     });
+
+    assets::certify_all_assets();
 }
 
 /// Returns the account identifier of the canister.
@@ -121,4 +126,10 @@ async fn transfer_icp(to_account_identifier: String) {
 
     let result: Result<BlockIndex, TransferError> = result.candid().unwrap();
     result.unwrap();
+}
+
+/// Serves frontend assets.
+#[ic_cdk::query]
+fn http_request(req: HttpRequest) -> HttpResponse {
+    assets::serve_asset(&req)
 }

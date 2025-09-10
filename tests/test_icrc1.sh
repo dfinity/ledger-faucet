@@ -38,7 +38,7 @@ echo ""
 
 # Step 2: Deploy canisters
 echo -e "${YELLOW}📦 Deploying canisters...${NC}"
-if dfx deploy ticrc1-backend; then
+if just deploy ticrc1; then
     echo -e "${GREEN}✅ Canisters deployed successfully${NC}"
 else
     echo -e "${RED}❌ Failed to deploy canisters${NC}"
@@ -49,7 +49,7 @@ echo ""
 
 # Step 3: Transfer ICRC1 tokens
 echo -e "${YELLOW}💰 Transferring ICRC1 tokens to ${TEST_PRINCIPAL}...${NC}"
-if dfx canister call ticrc1-backend transfer_icrc1 "(principal \"${TEST_PRINCIPAL}\")"; then
+if dfx canister call ticrc1 transfer_icrc1 "(principal \"${TEST_PRINCIPAL}\")"; then
     echo -e "${GREEN}✅ ICRC1 tokens transferred successfully${NC}"
 else
     echo -e "${RED}❌ Failed to transfer ICRC1 tokens${NC}"
