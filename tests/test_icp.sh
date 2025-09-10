@@ -38,7 +38,7 @@ echo ""
 
 # Step 2: Deploy canisters
 echo -e "${YELLOW}📦 Deploying canisters...${NC}"
-if just deploy testicp; then
+if just deploy-backend-only testicp; then
     echo -e "${GREEN}✅ Canisters deployed successfully${NC}"
 else
     echo -e "${RED}❌ Failed to deploy canisters${NC}"

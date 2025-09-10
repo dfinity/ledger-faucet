@@ -36,6 +36,25 @@ deploy token_type:
     exit 1
   fi
 
+deploy-backend-only token_type:
+  #!/usr/bin/env bash
+  # Build backend (without frontend)
+  cargo build --target wasm32-unknown-unknown --release
+
+  # Deploy canisters
+  if [ "{{token_type}}" = "testicp" ]; then
+    dfx deploy testicp-ledger
+    dfx deploy testicp --mode=reinstall -y
+  elif [ "{{token_type}}" = "ticrc1" ]; then
+    dfx deploy ticrc1-ledger
+    dfx deploy ticrc1 --mode=reinstall -y
+  else
+    echo "Error: Please specify 'testicp' or 'ticrc1'"
+    echo "Usage: just deploy testicp"
+    echo "       just deploy ticrc1"
+    exit 1
+  fi
+
 deploy-icrc1-mainnet:
   # NOTE: You need to manually set is_mint to false in the backend canister before deploying
   dfx deploy ticrc1 --network ic --mode=reinstall
