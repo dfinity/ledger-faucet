@@ -38,7 +38,7 @@ echo ""
 
 # Step 2: Deploy canisters
 echo -e "${YELLOW}📦 Deploying canisters...${NC}"
-if dfx deploy testicp-backend; then
+if just deploy-backend-only testicp; then
     echo -e "${GREEN}✅ Canisters deployed successfully${NC}"
 else
     echo -e "${RED}❌ Failed to deploy canisters${NC}"
@@ -49,7 +49,7 @@ echo ""
 
 # Step 3: Transfer ICP tokens
 echo -e "${YELLOW}💰 Transferring ICP tokens to ${TEST_ACCOUNT}...${NC}"
-if dfx canister call testicp-backend transfer_icp "(\"${TEST_ACCOUNT}\")"; then
+if dfx canister call testicp transfer_icp "(\"${TEST_ACCOUNT}\")"; then
     echo -e "${GREEN}✅ ICP tokens transferred successfully${NC}"
 else
     echo -e "${RED}❌ Failed to transfer ICP tokens${NC}"

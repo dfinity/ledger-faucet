@@ -1,5 +1,5 @@
 import { html, render } from 'lit-html';
-import { createActor } from 'declarations/testicp-backend';
+import { createActor } from 'declarations/testicp';
 import logo from './logo2.svg';
 import { Principal } from '@dfinity/principal';
 
@@ -13,14 +13,13 @@ class App {
   constructor() {
     // Get token symbol from environment variable, with fallback to TICRC1
     this.tokenSymbol = import.meta.env.VITE_TOKEN_SYMBOL || 'TICRC1';
+    this.backend = createActor(import.meta.env.VITE_CANISTER_ID);
 
     // Infer ledger type from token symbol
     if (this.tokenSymbol === 'TESTICP') {
       this.ledgerType = LedgerType.ICP;
-      this.backend = createActor(process.env.CANISTER_ID_TESTICP_BACKEND);
     } else {
       this.ledgerType = LedgerType.ICRC1;
-      this.backend = createActor(process.env.CANISTER_ID_TICRC1_BACKEND);
     }
     
     this.greeting = '';

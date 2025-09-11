@@ -10,6 +10,9 @@ use icrc_ledger_types::icrc1::transfer::TransferArg as Icrc1TransferArg;
 use serde::Deserialize;
 use std::cell::RefCell;
 
+#[cfg(feature = "frontend")]
+mod assets;
+
 const NON_MINTER_FEE: u64 = 10_000;
 
 thread_local! {
@@ -45,6 +48,9 @@ fn init(state: State) {
     STATE.with(|s| {
         *s.borrow_mut() = state;
     });
+
+    #[cfg(feature = "frontend")]
+    assets::certify_all_assets();
 }
 
 /// Returns the account identifier of the canister.
@@ -121,4 +127,11 @@ async fn transfer_icp(to_account_identifier: String) {
 
     let result: Result<BlockIndex, TransferError> = result.candid().unwrap();
     result.unwrap();
+}
+
+/// Serves frontend assets.
+#[cfg(feature = "frontend")]
+#[ic_cdk::query]
+fn http_request(req: ic_http_certification::HttpRequest) -> ic_http_certification::HttpResponse {
+    assets::serve_asset(&req)
 }
