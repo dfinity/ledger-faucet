@@ -135,7 +135,7 @@ Once a beta release has been tested, they can be deployed to production as follo
  (record { ledger_canister = principal "3jkp5-oyaaa-aaaaj-azwqa-cai"; ledger_type = variant { ICRC1 }; is_mint = false; })
  ```
 
-Minting TESTICP and TICRC1 tokens using Orbit
+## Minting TESTICP and TICRC1 tokens using Orbit
 
 1. From the menu on the left, select "Canisters"
 2. Select the canister for which you want to mint tokens ("Test ICP Ledger" or Test ICRC ledger)
