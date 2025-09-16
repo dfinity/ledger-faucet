@@ -47,6 +47,7 @@ deploy-backend-only token_type:
   #!/usr/bin/env bash
   # Build backend (without frontend)
   cargo build --target wasm32-unknown-unknown --release
+  gzip -n -f "./target/wasm32-unknown-unknown/release/backend.wasm"
 
   # Deploy canisters
   if [ "{{token_type}}" = "testicp" ]; then
