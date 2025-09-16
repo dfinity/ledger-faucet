@@ -56,19 +56,19 @@ jobs:
 
           echo "Building testicp..."
           just build testicp
-          if [ ! -f "./target/wasm32-unknown-unknown/release/backend.wasm" ]; then
-            echo "Error: testicp build failed - backend.wasm not found"
+          if [ ! -f "./target/wasm32-unknown-unknown/release/backend.wasm.gz" ]; then
+            echo "Error: testicp build failed - backend.wasm.gz not found"
             exit 1
           fi
-          mv ./target/wasm32-unknown-unknown/release/backend.wasm ./release-artifacts/testicp.wasm
+          mv ./target/wasm32-unknown-unknown/release/backend.wasm.gz ./release-artifacts/testicp.wasm.gz
 
           echo "Building ticrc1..."
           just build ticrc1
-          if [ ! -f "./target/wasm32-unknown-unknown/release/backend.wasm" ]; then
-            echo "Error: ticrc1 build failed - backend.wasm not found"
+          if [ ! -f "./target/wasm32-unknown-unknown/release/backend.wasm.gz" ]; then
+            echo "Error: ticrc1 build failed - backend.wasm.gz not found"
             exit 1
           fi
-          mv ./target/wasm32-unknown-unknown/release/backend.wasm ./release-artifacts/ticrc1.wasm
+          mv ./target/wasm32-unknown-unknown/release/backend.wasm ./release-artifacts/ticrc1.wasm.gz
 
           echo "Build artifacts created:"
           ls -la release-artifacts/
