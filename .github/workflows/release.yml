@@ -68,7 +68,7 @@ jobs:
             echo "Error: ticrc1 build failed - backend.wasm.gz not found"
             exit 1
           fi
-          mv ./target/wasm32-unknown-unknown/release/backend.wasm ./release-artifacts/ticrc1.wasm.gz
+          mv ./target/wasm32-unknown-unknown/release/backend.wasm.gz ./release-artifacts/ticrc1.wasm.gz
 
           echo "Build artifacts created:"
           ls -la release-artifacts/
@@ -95,8 +95,8 @@ jobs:
           body: |
             This release contains the following artifacts:
             
-            - TESTICP Faucet Canister: `testicp.wasm`
-            - TICRC1 Faucet Canister: `ticrc1.wasm`
+            - TESTICP Faucet Canister: `testicp.wasm.gz`
+            - TICRC1 Faucet Canister: `ticrc1.wasm.gz`
             
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
