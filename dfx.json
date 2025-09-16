@@ -18,14 +18,14 @@
       "type": "custom",
       "candid": "./src/backend/backend.did",
       "init_arg": "(record { ledger_canister = principal \"xafvr-biaaa-aaaai-aql5q-cai\"; ledger_type = variant { ICP }; is_mint = true; })",
-      "wasm": "./target/wasm32-unknown-unknown/release/backend.wasm",
+      "wasm": "./target/wasm32-unknown-unknown/release/backend.wasm.gz",
       "specified_id": "nqoci-rqaaa-aaaap-qp53q-cai"
     },
     "ticrc1": {
       "type": "custom",
       "candid": "./src/backend/backend.did",
       "init_arg": "(record { ledger_canister = principal \"3jkp5-oyaaa-aaaaj-azwqa-cai\"; ledger_type = variant { ICRC1 }; is_mint = true; })",
-      "wasm": "./target/wasm32-unknown-unknown/release/backend.wasm",
+      "wasm": "./target/wasm32-unknown-unknown/release/backend.wasm.gz",
       "specified_id": "pwwqf-yaaaa-aaaap-qp5wq-cai"
     }
   },

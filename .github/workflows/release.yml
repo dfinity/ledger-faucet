@@ -49,43 +49,29 @@ jobs:
           sudo mv dfx /usr/local/bin/dfx
           dfx --version
 
-      - name: Build backend canister
+      - name: Build canisters
         run: |
-          # Build backend canister (same Wasm works for both ICP and ICRC1)
-          just build testicp-backend
+          set -e  # Exit on any error
+          mkdir -p release-artifacts
 
-      - name: Build frontend canisters
-        run: |
-          # Build frontend canisters
-          just build testicp-frontend
-          just build ticrc1-frontend
-
-      - name: Create release artifacts directory
-        run: mkdir -p release-artifacts
-
-      - name: Copy Wasm files
-        run: |
-          # Copy backend Wasm file (both backends use the same code)
-          cp .dfx/local/canisters/testicp-backend/testicp-backend.wasm release-artifacts/ledger-faucet-backend.wasm
-
-      - name: Package frontend assets
-        run: |
-          # Package frontend build output
-          if [ -d "src/frontend/dist/icp" ]; then
-            tar -czf release-artifacts/testicp-frontend-assets.tar.gz -C src/frontend/dist icp
-            echo "✅ Packaged testicp-frontend assets"
-          else
-            echo "❌ testicp-frontend dist directory not found"
-            ls -la src/frontend/dist/ || echo "dist directory doesn't exist"
+          echo "Building testicp..."
+          just build testicp
+          if [ ! -f "./target/wasm32-unknown-unknown/release/backend.wasm.gz" ]; then
+            echo "Error: testicp build failed - backend.wasm.gz not found"
+            exit 1
           fi
-          
-          if [ -d "src/frontend/dist/icrc1" ]; then
-            tar -czf release-artifacts/ticrc1-frontend-assets.tar.gz -C src/frontend/dist icrc1
-            echo "✅ Packaged ticrc1-frontend assets"
-          else
-            echo "❌ ticrc1-frontend dist directory not found"
-            ls -la src/frontend/dist/ || echo "dist directory doesn't exist"
+          mv ./target/wasm32-unknown-unknown/release/backend.wasm.gz ./release-artifacts/testicp.wasm.gz
+
+          echo "Building ticrc1..."
+          just build ticrc1
+          if [ ! -f "./target/wasm32-unknown-unknown/release/backend.wasm.gz" ]; then
+            echo "Error: ticrc1 build failed - backend.wasm.gz not found"
+            exit 1
           fi
+          mv ./target/wasm32-unknown-unknown/release/backend.wasm.gz ./release-artifacts/ticrc1.wasm.gz
+
+          echo "Build artifacts created:"
+          ls -la release-artifacts/
 
       - name: Extract version
         id: version
@@ -109,12 +95,8 @@ jobs:
           body: |
             This release contains the following artifacts:
             
-            ### Backend Canister (Wasm file)
-            - `ledger-faucet-backend.wasm` - Faucet backend canister (works for both ICP and ICRC1)
-            
-            ### Frontend Assets
-            - `testicp-frontend-assets.tar.gz` - TESTICP frontend assets
-            - `ticrc1-frontend-assets.tar.gz` - TICRC1 frontend assets
+            - TESTICP Faucet Canister: `testicp.wasm.gz`
+            - TICRC1 Faucet Canister: `ticrc1.wasm.gz`
             
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
