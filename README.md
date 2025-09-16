@@ -123,17 +123,31 @@ Once a beta release has been tested, they can be deployed to production as follo
 
 1. Download the wasm of the releases of `testicp` and `ticrc1`.
 2. Create an Orbit **reinstall** request with the wasm.
-3. Use the following init args:
+3. Use the following init args, noting that the Orbit UI only accepts hex arguments:
 
- **For TESTICP:**
- ```
- (record { ledger_canister = principal "xafvr-biaaa-aaaai-aql5q-cai"; ledger_type = variant { ICP }; is_mint = false; })
- ```
+### For TESTICP
+Use the following hex init arguments:
 
- **For TICRC1:**
- ```
- (record { ledger_canister = principal "3jkp5-oyaaa-aaaaj-azwqa-cai"; ledger_type = variant { ICRC1 }; is_mint = false; })
- ```
+```
+4449444c026c03d7bc96267ed088c28c0a01bdedcec80b686b01b6bede017f01000000010a00000000010082fb0101
+```
+
+Which can be computed as:
+
+```
+> didc encode '(record { ledger_canister = principal "xafvr-biaaa-aaaai-aql5q-cai"; ledger_type = variant { ICP }; is_mint = false; })'
+```
+
+### For TICRC1
+Use the following hex init arguments:
+
+```
+4449444c026c03d7bc96267ed088c28c0a01bdedcec80b686b01c6afa0a6037f01000000010a000000000120cda00101
+```
+
+```
+> didc encode '(record { ledger_canister = principal "3jkp5-oyaaa-aaaaj-azwqa-cai"; ledger_type = variant { ICRC1 }; is_mint = false; })'
+```
 
 ## Minting TESTICP and TICRC1 tokens using Orbit
 
