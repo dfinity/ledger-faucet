@@ -110,7 +110,71 @@ The recommended workflow is to **first create a beta release** for testing, then
 ### Release Artifacts
 
 Each release includes:
-- **Backend Wasm file**: `ledger-faucet-backend.wasm` (works for both ICP and ICRC1)
-- **Frontend assets**: `testicp-frontend-assets.tar.gz`, `ticrc1-frontend-assets.tar.gz`
+- *testicp.wasm.gz*
+- *ticrc1.wasm.gz*
 
 These artifacts can be used directly for deployment to production environments.
+
+## Deployment with Orbit
+
+This section is for the DFINITY team to update the live deployments, which are managed by Orbit.
+
+Once a beta release has been tested, they can be deployed to production as follows:
+
+1. Download the wasm of the releases of `testicp` and `ticrc1`.
+2. Create an Orbit **reinstall** request with the wasm.
+3. Use the following init args, noting that the Orbit UI only accepts hex arguments:
+
+### For TESTICP
+Use the following hex init arguments:
+
+```
+4449444c026c03d7bc96267ed088c28c0a01bdedcec80b686b01b6bede017f01000000010a00000000010082fb0101
+```
+
+Which can be computed as:
+
+```
+> didc encode '(record { ledger_canister = principal "xafvr-biaaa-aaaai-aql5q-cai"; ledger_type = variant { ICP }; is_mint = false; })'
+```
+
+### For TICRC1
+Use the following hex init arguments:
+
+```
+4449444c026c03d7bc96267ed088c28c0a01bdedcec80b686b01c6afa0a6037f01000000010a000000000120cda00101
+```
+
+```
+> didc encode '(record { ledger_canister = principal "3jkp5-oyaaa-aaaaj-azwqa-cai"; ledger_type = variant { ICRC1 }; is_mint = false; })'
+```
+
+## Minting TESTICP and TICRC1 tokens using Orbit
+
+1. From the menu on the left, select "Canisters"
+2. Select the canister for which you want to mint tokens ("Test ICP Ledger" or Test ICRC ledger)
+3. To see a previously executed mint transaction, where you can modify the recipient account and the amount, you can
+   click "See all" in the "Performed calls" window on the bottom-right. For the "Test ICP Ledger", one such example is
+    on 2025-06-26 (set this date as the "From" and "To" dates):
+
+(
+  record {
+    to = record {
+      owner = principal "xqyxz-rst4u-hjhl6-42tdq-gpcim-orf57-cc273-ikl5n-woi6z-jjkeq-gqe";
+      subaccount = null;
+    };
+    fee = null;
+    memo = null;
+    from_subaccount = null;
+    created_at_time = null;
+    amount = 10_000_000_000 : nat;
+  },
+)
+
+4. Modify the above transfer arguments as needed. E.g., to mint enough for a faucet to give out 10 tokens
+   (1_000_000_000) every second for the next 10 years (60*60*24*365*10=315360000), set the amount to
+   315_360_000_000_000_000. Thereafter, go back to the canister as described in step 2, and click the
+   "Perform call" button on the top-right.
+5. Select "icrc1_transfer" as the "Method name".
+6. Enter the transfer arguments in the "Arguments" field, using the format shown in step 3.
+7. Click "Execute" to execute the mint transaction.
