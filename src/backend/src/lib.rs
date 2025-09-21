@@ -19,26 +19,29 @@ thread_local! {
     static STATE: RefCell<State> = RefCell::new(State::default());
 }
 
-#[derive(Clone, CandidType, Deserialize, PartialEq)]
-enum LedgerType {
-    #[allow(clippy::upper_case_acronyms)]
-    ICP,
-    ICRC1,
+#[derive(Clone, CandidType, Deserialize)]
+struct LedgerConfig {
+    canister_id: Principal,
+    is_mint: bool,
 }
 
 #[derive(Clone, CandidType, Deserialize)]
 struct State {
-    ledger_canister: Principal,
-    ledger_type: LedgerType,
-    is_mint: bool,
+    icp_ledger: LedgerConfig,
+    icrc1_ledger: LedgerConfig,
 }
 
 impl Default for State {
     fn default() -> Self {
         Self {
-            ledger_canister: Principal::anonymous(),
-            ledger_type: LedgerType::ICRC1,
-            is_mint: false,
+            icp_ledger: LedgerConfig {
+                canister_id: Principal::anonymous(),
+                is_mint: false,
+            },
+            icrc1_ledger: LedgerConfig {
+                canister_id: Principal::anonymous(),
+                is_mint: false,
+            },
         }
     }
 }
@@ -64,48 +67,37 @@ async fn account_identifier() -> String {
 async fn transfer_icrc1(to_principal: Principal) {
     let state = STATE.with(|s| s.borrow().clone());
 
-    match state.ledger_type {
-        LedgerType::ICRC1 => {
-            let fee = if state.is_mint {
-                Some(Nat::from(0u64))
-            } else {
-                Some(Nat::from(NON_MINTER_FEE))
-            };
+    let fee = if state.icrc1_ledger.is_mint {
+        Some(Nat::from(0u64))
+    } else {
+        Some(Nat::from(NON_MINTER_FEE))
+    };
 
-            ic_cdk::call::Call::bounded_wait(state.ledger_canister, "icrc1_transfer")
-                .with_arg(Icrc1TransferArg {
-                    from_subaccount: None,
-                    to: Account {
-                        owner: to_principal,
-                        subaccount: None,
-                    },
-                    amount: Nat::from(10_0000_0000u64),
-                    fee,
-                    created_at_time: None,
-                    memo: None,
-                })
-                .await
-                .unwrap();
-        }
-        LedgerType::ICP => {
-            panic!("Ledger type must be ICRC1");
-        }
-    }
+    ic_cdk::call::Call::bounded_wait(state.icrc1_ledger.canister_id, "icrc1_transfer")
+        .with_arg(Icrc1TransferArg {
+            from_subaccount: None,
+            to: Account {
+                owner: to_principal,
+                subaccount: None,
+            },
+            amount: Nat::from(10_0000_0000u64),
+            fee,
+            created_at_time: None,
+            memo: None,
+        })
+        .await
+        .unwrap();
 }
 
-/// Transfers ICP tokens fo the specified account identifier.
+/// Transfers ICP tokens to the specified account identifier.
 #[ic_cdk::update]
 async fn transfer_icp(to_account_identifier: String) {
     let state = STATE.with(|s| s.borrow().clone());
 
-    if state.ledger_type != LedgerType::ICP {
-        panic!("Ledger type must be ICP");
-    }
-
     let account_identifier =
         AccountIdentifier::from_hex(&to_account_identifier).expect("Invalid account identifier");
 
-    let fee = if state.is_mint {
+    let fee = if state.icp_ledger.is_mint {
         Tokens::from_e8s(0u64)
     } else {
         Tokens::from_e8s(NON_MINTER_FEE)
@@ -120,10 +112,11 @@ async fn transfer_icp(to_account_identifier: String) {
         memo: Memo(0),
     };
 
-    let result: Response = ic_cdk::call::Call::bounded_wait(state.ledger_canister, "transfer")
-        .with_arg(transfer_arg)
-        .await
-        .unwrap();
+    let result: Response =
+        ic_cdk::call::Call::bounded_wait(state.icp_ledger.canister_id, "transfer")
+            .with_arg(transfer_arg)
+            .await
+            .unwrap();
 
     let result: Result<BlockIndex, TransferError> = result.candid().unwrap();
     result.unwrap();

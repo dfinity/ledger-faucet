@@ -1,9 +1,11 @@
 export const idlFactory = ({ IDL }) => {
-  const ledger_type = IDL.Variant({ 'ICP' : IDL.Null, 'ICRC1' : IDL.Null });
-  const init_args = IDL.Record({
+  const ledger_config = IDL.Record({
     'is_mint' : IDL.Bool,
-    'ledger_type' : ledger_type,
-    'ledger_canister' : IDL.Principal,
+    'canister_id' : IDL.Principal,
+  });
+  const init_args = IDL.Record({
+    'icp_ledger' : ledger_config,
+    'icrc1_ledger' : ledger_config,
   });
   return IDL.Service({
     'account_identifier' : IDL.Func([], [IDL.Text], ['query']),
@@ -12,11 +14,13 @@ export const idlFactory = ({ IDL }) => {
   });
 };
 export const init = ({ IDL }) => {
-  const ledger_type = IDL.Variant({ 'ICP' : IDL.Null, 'ICRC1' : IDL.Null });
-  const init_args = IDL.Record({
+  const ledger_config = IDL.Record({
     'is_mint' : IDL.Bool,
-    'ledger_type' : ledger_type,
-    'ledger_canister' : IDL.Principal,
+    'canister_id' : IDL.Principal,
+  });
+  const init_args = IDL.Record({
+    'icp_ledger' : ledger_config,
+    'icrc1_ledger' : ledger_config,
   });
   return [init_args];
 };

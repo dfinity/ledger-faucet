@@ -5,11 +5,9 @@
   "type": "module",
   "scripts": {
     "start": "VITE_TOKEN_SYMBOL=TICRC1 vite --port 3000",
-    "start:icp": "VITE_TOKEN_SYMBOL=TESTICP VITE_CANISTER_ID=nqoci-rqaaa-aaaap-qp53q-cai vite --port 3000",
-    "start:icrc1": "VITE_TOKEN_SYMBOL=TICRC1 VITE_CANISTER_ID=pwwqf-yaaaa-aaaap-qp5wq-cai vite --port 3000",
-    "prebuild": "dfx generate testicp",
-    "build:icp": "VITE_TOKEN_SYMBOL=TESTICP VITE_CANISTER_ID=nqoci-rqaaa-aaaap-qp53q-cai vite build --outDir dist",
-    "build:icrc1": "VITE_TOKEN_SYMBOL=TICRC1 VITE_CANISTER_ID=pwwqf-yaaaa-aaaap-qp5wq-cai vite build --outDir dist",
+    "start:unified": "VITE_CANISTER_ID=nqoci-rqaaa-aaaap-qp53q-cai vite --port 3000",
+    "prebuild": "dfx generate faucet",
+    "build": "VITE_CANISTER_ID=nqoci-rqaaa-aaaap-qp53q-cai vite build --outDir dist",
     "format": "prettier --write \"src/**/*.{json,js,jsx,ts,tsx,css,scss}\""
   },
   "devDependencies": {

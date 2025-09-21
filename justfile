@@ -1,47 +1,20 @@
-# Start development server with ICP token type
-start-icp:
-  cd src/frontend && VITE_TOKEN_SYMBOL=TESTICP npm run start
-
-# Start development server with ICRC1 token type
-start-icrc1:
-  cd src/frontend && VITE_TOKEN_SYMBOL=TICRC1 npm run start
-
-# Deploy a specific token
-build token_type:
+build:
   #!/usr/bin/env bash
   # Build frontend
-  if [ "{{token_type}}" = "testicp" ]; then
-    cd src/frontend && npm install && VITE_TOKEN_SYMBOL=TESTICP npm run build:icp
-    cd ../../
-  elif [ "{{token_type}}" = "ticrc1" ]; then
-    cd src/frontend && npm install && VITE_TOKEN_SYMBOL=TICRC1 npm run build:icrc1
-    cd ../../
-  else
-    echo "Error: Please specify 'testicp' or 'ticrc1'"
-    exit 1
-  fi
+  cd src/frontend && npm install && npm run build
+  cd ../..
 
   # Build and compress backend.
   cargo build --target wasm32-unknown-unknown --release --features frontend
   gzip -n -f "./target/wasm32-unknown-unknown/release/backend.wasm"
 
 # Deploy a specific token
-deploy token_type: (build token_type)
+deploy: build
   #!/usr/bin/env bash
-  if [ "{{token_type}}" = "testicp" ]; then
-    # Deploy canisters
-    dfx deploy testicp-ledger
-    dfx deploy testicp --mode=reinstall -y
-  elif [ "{{token_type}}" = "ticrc1" ]; then
-    # Deploy canisters
-    dfx deploy ticrc1-ledger
-    dfx deploy ticrc1 --mode=reinstall -y
-  else
-    echo "Error: Please specify 'testicp' or 'ticrc1'"
-    echo "Usage: just deploy testicp"
-    echo "       just deploy ticrc1"
-    exit 1
-  fi
+  # Deploy canisters
+  dfx deploy testicp-ledger
+  dfx deploy ticrc1-ledger
+  dfx deploy faucet --mode=reinstall -y
 
 deploy-backend-only token_type:
   #!/usr/bin/env bash

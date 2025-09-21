@@ -3,12 +3,13 @@ import type { ActorMethod } from '@dfinity/agent';
 import type { IDL } from '@dfinity/candid';
 
 export interface init_args {
-  'is_mint' : boolean,
-  'ledger_type' : ledger_type,
-  'ledger_canister' : Principal,
+  'icp_ledger' : ledger_config,
+  'icrc1_ledger' : ledger_config,
 }
-export type ledger_type = { 'ICP' : null } |
-  { 'ICRC1' : null };
+export interface ledger_config {
+  'is_mint' : boolean,
+  'canister_id' : Principal,
+}
 export interface _SERVICE {
   'account_identifier' : ActorMethod<[], string>,
   'transfer_icp' : ActorMethod<[string], undefined>,

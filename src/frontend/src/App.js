@@ -1,5 +1,5 @@
 import { html, render } from 'lit-html';
-import { createActor } from 'declarations/testicp';
+import { createActor } from 'declarations/faucet';
 import logo from './logo2.svg';
 import { Principal } from '@dfinity/principal';
 
@@ -11,16 +11,13 @@ const LedgerType = {
 
 class App {
   constructor() {
-    // Get token symbol from environment variable, with fallback to TICRC1
-    this.tokenSymbol = import.meta.env.VITE_TOKEN_SYMBOL || 'TICRC1';
-    this.backend = createActor(import.meta.env.VITE_CANISTER_ID);
-
-    // Infer ledger type from token symbol
-    if (this.tokenSymbol === 'TESTICP') {
-      this.ledgerType = LedgerType.ICP;
-    } else {
-      this.ledgerType = LedgerType.ICRC1;
-    }
+    // State for token selection
+    this.selectedToken = 'TESTICP'; // Default to TESTICP
+    
+    // Initialize unified faucet backend
+    console.log("faucet id");
+    console.log(process.env.CANISTER_ID_FAUCET);
+    this.faucetBackend = createActor(process.env.CANISTER_ID_FAUCET);
     
     this.greeting = '';
     this.isLoading = false;
@@ -29,6 +26,21 @@ class App {
     
     this.#render();
   }
+
+#handleTokenChange = (e) => {
+    this.selectedToken = e.target.value;
+    this.greeting = '';
+    this.isError = false;
+    this.isSuccess = false;
+    
+    // Clear the input field when switching token types
+    const inputField = document.getElementById('recipient-input');
+    if (inputField) {
+      inputField.value = '';
+    }
+    
+    this.#render();
+  };
 
   #triggerCoinAnimation() {
     // Create coins animation
@@ -54,11 +66,11 @@ class App {
 
   #handleSubmit = async (e) => {
     e.preventDefault();
-    const inputValue = document.getElementById('principal').value.trim();
+    const inputValue = document.getElementById('recipient-input').value.trim();
     
     if (!inputValue) {
-      const inputType = this.ledgerType === LedgerType.ICP ? 'Account Identifier' : 'Principal ID';
-      this.greeting = `Please enter a valid ${inputType}.`;
+      const inputTypeLabel = this.selectedToken === 'TESTICP' ? 'Account Identifier' : 'Principal';
+      this.greeting = `Please enter a valid ${inputTypeLabel}.`;
       this.isError = true;
       this.isSuccess = false;
       this.#render();
@@ -73,22 +85,24 @@ class App {
       this.#render();
 
       let result;
-      if (this.ledgerType === LedgerType.ICRC1) {
+      
+      if (this.selectedToken === 'TICRC1') {
+        // TICRC1 always uses principal
         const principal = Principal.fromText(inputValue);
-        result = await this.backend.transfer_icrc1(principal);
-      } else if (this.ledgerType === LedgerType.ICP) {
-        // For ICP, we pass the Account Identifier directly as string
-        result = await this.backend.transfer_icp(inputValue);
+        result = await this.faucetBackend.transfer_icrc1(principal);
+      } else if (this.selectedToken === 'TESTICP') {
+        // TESTICP always uses account identifier
+        result = await this.faucetBackend.transfer_icp(inputValue);
       }
 
-      this.greeting = result || `Success! 10 ${this.tokenSymbol} tokens have been transferred to your account.`;
+      this.greeting = result || `Success! 10 ${this.selectedToken} tokens have been transferred to your account.`;
       this.isError = false;
       this.isSuccess = true;
       this.#triggerCoinAnimation();
     } catch (error) {
       console.error(error);
-      const inputType = this.ledgerType === LedgerType.ICP ? 'Account Identifier' : 'Principal ID';
-      this.greeting = `Error: Invalid ${inputType} format. Please check and try again.`;
+      const inputTypeLabel = this.selectedToken === 'TESTICP' ? 'Account Identifier' : 'Principal';
+      this.greeting = `Error: Invalid ${inputTypeLabel} format. Please check and try again.`;
       this.isError = true;
       this.isSuccess = false;
     } finally {
@@ -98,27 +112,63 @@ class App {
   };
 
   #render() {
-    const inputType = this.ledgerType === LedgerType.ICP ? 'Account Identifier' : 'Principal';
-    const inputPlaceholder = this.ledgerType === LedgerType.ICP 
-      ? 'e.g. d4685b31b51450508aff0d02b4f023b2a7d1f74b...' 
-      : 'e.g. u6s2n-gx777-77774-qaaba-cai';
+    // Determine current input type and placeholder
+    const currentInputType = this.selectedToken === 'TESTICP' ? 'Account Identifier' : 'Principal';
+    const currentPlaceholder = this.selectedToken === 'TESTICP' 
+      ? 'e.g. d4685b31b51450508aff0d02b4f023b2a7d1f74b...'
+      : 'e.g. rdmx6-jaaaa-aaaah-qcaiq-cai';
 
     let body = html`
       <main>
-        <h1>${this.tokenSymbol} Token Faucet</h1>
-        <p>Get 10 ${this.tokenSymbol} test tokens for development and testing</p>
+        <h1>IC Token Faucet</h1>
+        <p>Get 10 test tokens for development and testing</p>
+        
+        <!-- Token Selection -->
+        <div class="token-selection">
+          <h3>Select Token Type:</h3>
+          <div class="token-options">
+            <label class="token-option ${this.selectedToken === 'TESTICP' ? 'selected' : ''}">
+              <input 
+                type="radio" 
+                name="token" 
+                value="TESTICP" 
+                ?checked=${this.selectedToken === 'TESTICP'}
+                @change=${this.#handleTokenChange}
+                ?disabled=${this.isLoading}
+              />
+              <span class="token-label">
+                <strong>TESTICP</strong>
+                <small>Test ICP tokens</small>
+              </span>
+            </label>
+            <label class="token-option ${this.selectedToken === 'TICRC1' ? 'selected' : ''}">
+              <input 
+                type="radio" 
+                name="token" 
+                value="TICRC1" 
+                ?checked=${this.selectedToken === 'TICRC1'}
+                @change=${this.#handleTokenChange}
+                ?disabled=${this.isLoading}
+              />
+              <span class="token-label">
+                <strong>TICRC1</strong>
+                <small>Test ICRC-1 tokens</small>
+              </span>
+            </label>
+          </div>
+        </div>
         
         <form action="#">
-          <label for="principal">Enter your ${inputType}:</label>
+          <label for="recipient-input">Enter your ${currentInputType}:</label>
           <input 
-            id="principal" 
-            alt="${inputType}" 
+            id="recipient-input" 
+            alt="${currentInputType}" 
             type="text" 
-            placeholder="${inputPlaceholder}"
+            placeholder="${currentPlaceholder}"
             ?disabled=${this.isLoading}
           />
           <button type="submit" ?disabled=${this.isLoading}>
-            ${this.isLoading ? 'Processing...' : 'Request Tokens'}
+            ${this.isLoading ? 'Processing...' : `Request ${this.selectedToken} Tokens`}
           </button>
         </form>
         
@@ -127,8 +177,9 @@ class App {
         <div class="info">
           <p><strong>Instructions:</strong></p>
           <ul>
-            <li>Enter your Internet Computer ${inputType} above</li>
-            <li>Click "Request Tokens" to receive 10 ${this.tokenSymbol} tokens</li>
+            <li>Select your preferred token type</li>
+            <li>Enter your Internet Computer ${currentInputType}</li>
+            <li>Click "Request ${this.selectedToken} Tokens" to receive 10 ${this.selectedToken}</li>
             <li>Use these tokens for testing and development purposes</li>
           </ul>
         </div>
