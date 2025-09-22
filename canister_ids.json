@@ -1,8 +1,8 @@
 {
-    "testicp": {
-        "ic": "nqoci-rqaaa-aaaap-qp53q-cai"
+    "ticrc1-ledger": {
+        "ic": "3jkp5-oyaaa-aaaaj-azwqa-cai"
     },
-    "ticrc1": {
-        "ic": "pwwqf-yaaaa-aaaap-qp5wq-cai"
+    "faucet": {
+        "ic": "nqoci-rqaaa-aaaap-qp53q-cai"
     }
 }
