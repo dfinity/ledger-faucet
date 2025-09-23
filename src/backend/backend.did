@@ -1,12 +1,11 @@
-type ledger_type = variant {
-    ICRC1;
-    ICP;
+type ledger_config = record {
+    canister_id: principal;
+    is_mint: bool;
 };
 
 type init_args = record {
-    ledger_canister: principal;
-    ledger_type: ledger_type;
-    is_mint: bool;
+    icp_ledger: ledger_config;
+    icrc1_ledger: ledger_config;
 };
 
 service: (init_args) -> {

@@ -11,6 +11,7 @@ export interface FaucetTestConfig {
   identifier: string;
   canisterUrl: string;
   deployCommand: string;
+  tokenType: 'TESTICP' | 'TICRC1';
   balanceCommand: (identifier: string) => string;
   parseBalance: (result: string) => number;
   balanceUnit?: string;
@@ -110,9 +111,19 @@ export async function requestTokensFromFaucet(page: Page, config: FaucetTestConf
   // Navigate to the faucet website
   await page.goto(config.canisterUrl);
   
-  // Wait for the page to load and find the input field
+  // Wait for the page to load
+  console.log('⏳ Waiting for page to load...');
+  await page.waitForLoadState('networkidle');
+  
+  // Select the correct token type
+  console.log(`🎯 Selecting token type: ${config.tokenType}...`);
+  const tokenButton = page.locator(`label.token-option`).filter({ has: page.locator(`input[value="${config.tokenType}"]`) });
+  await expect(tokenButton).toBeVisible({ timeout: 10000 });
+  await tokenButton.click();
+  
+  // Wait for the input field to be ready
   console.log('🔍 Looking for input field...');
-  const input = page.locator('input[type="text"]').first();
+  const input = page.locator('input[type="text"]#recipient-input');
   await expect(input).toBeVisible({ timeout: 10000 });
   
   // Fill in the identifier
@@ -120,8 +131,8 @@ export async function requestTokensFromFaucet(page: Page, config: FaucetTestConf
   await input.fill(config.identifier);
   
   // Find and click the "Request Tokens" button
-  console.log('🖱️ Clicking Request Tokens button...');
-  const requestButton = page.locator('button').filter({ hasText: /request tokens/i });
+  console.log(`🖱️ Clicking Request ${config.tokenType} Tokens button...`);
+  const requestButton = page.locator('button').filter({ hasText: new RegExp(`request ${config.tokenType} tokens`, 'i') });
   await expect(requestButton).toBeVisible();
   await requestButton.click();
   

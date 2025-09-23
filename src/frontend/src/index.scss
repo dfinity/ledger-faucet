@@ -54,6 +54,11 @@ label {
   text-align: left;
 }
 
+form label {
+  max-width: 400px;
+  margin: 0 auto 0.5rem auto;
+}
+
 input[type="text"] {
   width: 100%;
   max-width: 400px;
@@ -197,6 +202,69 @@ button:disabled {
   }
 }
 
+/* Token Selection Styling */
+.token-selection {
+  margin: 1.5rem 0;
+}
+
+.token-selection h3 {
+  margin-bottom: 1rem;
+  color: #333;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.token-options {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.token-option {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+  min-width: 120px;
+}
+
+.token-option:hover {
+  border-color: #29ABE2;
+  background: #f8f9ff;
+}
+
+.token-option.selected {
+  border-color: #29ABE2;
+  background: linear-gradient(135deg, #e8f4fd 0%, #f0f8ff 100%);
+  box-shadow: 0 2px 8px rgba(41, 171, 226, 0.2);
+}
+
+.token-option input[type="radio"] {
+  display: none;
+}
+
+.token-label {
+  text-align: left;
+}
+
+.token-label strong {
+  display: block;
+  color: #333;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.token-label small {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+
 @media (max-width: 600px) {
   main {
     margin: 1rem;
@@ -213,5 +281,15 @@ button:disabled {
   
   .info {
     padding: 1rem;
+  }
+
+  .token-options {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .token-option {
+    width: 100%;
+    max-width: 250px;
   }
 }

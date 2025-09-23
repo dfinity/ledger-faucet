@@ -9,7 +9,8 @@ import {
 const ICP_CONFIG: FaucetTestConfig = {
   identifier: 'f0da8debe354b98d21be4fe41f0d5fbe403763f22cc6f6b6850cc390d8b33e77',
   canisterUrl: 'http://nqoci-rqaaa-aaaap-qp53q-cai.localhost:4943/',
-  deployCommand: 'just deploy testicp',
+  deployCommand: 'just deploy',
+  tokenType: 'TESTICP',
   balanceCommand: (identifier: string) => 
     `dfx canister call testicp-ledger account_balance_dfx '(record { account = "${identifier}"})'`,
   parseBalance: (result: string) => {

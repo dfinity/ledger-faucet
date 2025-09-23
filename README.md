@@ -109,11 +109,7 @@ The recommended workflow is to **first create a beta release** for testing, then
 
 ### Release Artifacts
 
-Each release includes:
-- *testicp.wasm.gz*
-- *ticrc1.wasm.gz*
-
-These artifacts can be used directly for deployment to production environments.
+Each release includes the `faucet.wasm.gz` canister, which serves both the frontend and backend.
 
 ## Deployment with Orbit
 
@@ -121,32 +117,18 @@ This section is for the DFINITY team to update the live deployments, which are m
 
 Once a beta release has been tested, they can be deployed to production as follows:
 
-1. Download the wasm of the releases of `testicp` and `ticrc1`.
+1. Download the canister's wasm.
 2. Create an Orbit **reinstall** request with the wasm.
 3. Use the following init args, noting that the Orbit UI only accepts hex arguments:
 
-### For TESTICP
-Use the following hex init arguments:
-
 ```
-4449444c026c03d7bc96267ed088c28c0a01bdedcec80b686b01b6bede017f01000000010a00000000010082fb0101
+4449444c026c02b2d5ecf60701c2f8dadc0f016c02d7bc96267eb3c4b1f20468010000010a00000000010082fb010100010a000000000120cda00101
 ```
 
 Which can be computed as:
 
 ```
-> didc encode '(record { ledger_canister = principal "xafvr-biaaa-aaaai-aql5q-cai"; ledger_type = variant { ICP }; is_mint = false; })'
-```
-
-### For TICRC1
-Use the following hex init arguments:
-
-```
-4449444c026c03d7bc96267ed088c28c0a01bdedcec80b686b01c6afa0a6037f01000000010a000000000120cda00101
-```
-
-```
-> didc encode '(record { ledger_canister = principal "3jkp5-oyaaa-aaaaj-azwqa-cai"; ledger_type = variant { ICRC1 }; is_mint = false; })'
+> didc encode "(record { icp_ledger = record { canister_id = principal \"xafvr-biaaa-aaaai-aql5q-cai\"; is_mint = false }; icrc1_ledger = record { canister_id = principal \"3jkp5-oyaaa-aaaaj-azwqa-cai\"; is_mint = false }; })"
 ```
 
 ## Minting TESTICP and TICRC1 tokens using Orbit

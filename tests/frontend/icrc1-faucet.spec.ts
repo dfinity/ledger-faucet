@@ -8,8 +8,9 @@ import {
 
 const ICRC1_CONFIG: FaucetTestConfig = {
   identifier: 'uqqxf-5h777-77774-qaaaa-cai',
-  canisterUrl: 'http://pwwqf-yaaaa-aaaap-qp5wq-cai.localhost:4943/',
-  deployCommand: 'just deploy ticrc1',
+  canisterUrl: 'http://nqoci-rqaaa-aaaap-qp53q-cai.localhost:4943/',
+  deployCommand: 'just deploy',
+  tokenType: 'TICRC1',
   balanceCommand: (identifier: string) => 
     `dfx canister call ticrc1-ledger icrc1_balance_of '(record { owner = principal "${identifier}"})'`,
   parseBalance: (result: string) => {
