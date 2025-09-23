@@ -2,6 +2,9 @@
     "ticrc1-ledger": {
         "ic": "3jkp5-oyaaa-aaaaj-azwqa-cai"
     },
+    "testicp-ledger": {
+        "ic": "xafvr-biaaa-aaaai-aql5q-cai"
+    },
     "faucet": {
         "ic": "nqoci-rqaaa-aaaap-qp53q-cai"
     }
