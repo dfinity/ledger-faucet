@@ -6,7 +6,7 @@ import {
   FaucetTestConfig 
 } from './test-utils.js';
 
-const ICP_CONFIG: FaucetTestConfig = {
+const ICP_ACCOUNT_CONFIG: FaucetTestConfig = {
   identifier: 'f0da8debe354b98d21be4fe41f0d5fbe403763f22cc6f6b6850cc390d8b33e77',
   canisterUrl: 'http://nqoci-rqaaa-aaaap-qp53q-cai.localhost:4943/',
   deployCommand: 'just deploy',
@@ -24,16 +24,38 @@ const ICP_CONFIG: FaucetTestConfig = {
   expectedBalance: 1_000_000_000 // 1 billion e8s
 };
 
-test.describe('ICP Faucet End-to-End Test', () => {
-  test.beforeAll(async () => {
-    await setupFaucetTest(ICP_CONFIG);
-  });
+const ICP_PRINCIPAL_CONFIG: FaucetTestConfig = {
+  identifier: 'uqqxf-5h777-77774-qaaaa-cai',
+  canisterUrl: 'http://nqoci-rqaaa-aaaap-qp53q-cai.localhost:4943/',
+  deployCommand: 'just deploy',
+  tokenType: 'TESTICP',
+  balanceCommand: (identifier: string) => 
+    `dfx canister call testicp-ledger icrc1_balance_of '(record { owner = principal "${identifier}"})'`,
+  parseBalance: (result: string) => {
+    const balanceMatch = result.match(/([0-9_]+)\s*:\s*nat/);
+    if (!balanceMatch) {
+      throw new Error(`Could not parse balance from result: ${result}`);
+    }
+    return parseInt(balanceMatch[1].replace(/_/g, ''));
+  },
+  balanceUnit: 'tokens',
+  expectedBalance: 1_000_000_000 // 1 billion tokens
+};
 
-  test('should request tokens and verify balance increase', async ({ page }) => {
-    await requestTokensFromFaucet(page, ICP_CONFIG);
-  });
-  
-  test.afterAll(async () => {
-    cleanupFaucetTest();
-  });
+test.describe('ICP Faucet End-to-End Tests', () => {
+    test.beforeAll(async () => {
+      await setupFaucetTest();
+    });
+
+    test('should request TESTICP tokens using Account Identifier', async ({ page }) => {
+      await requestTokensFromFaucet(page, ICP_ACCOUNT_CONFIG);
+    });
+    
+    test('should request TESTICP tokens using Principal', async ({ page }) => {
+      await requestTokensFromFaucet(page, ICP_PRINCIPAL_CONFIG);
+    });
+    
+    test.afterAll(async () => {
+      cleanupFaucetTest();
+    });
 }); 

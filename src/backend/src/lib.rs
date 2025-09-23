@@ -62,18 +62,15 @@ async fn account_identifier() -> String {
     AccountIdentifier::new(&ic_cdk::api::canister_self(), &Subaccount([0; 32])).to_hex()
 }
 
-/// Transfers ICRC1 tokens to the specified principal.
-#[ic_cdk::update]
-async fn transfer_icrc1(to_principal: Principal) {
-    let state = STATE.with(|s| s.borrow().clone());
-
-    let fee = if state.icrc1_ledger.is_mint {
+/// Helper function to transfer ICRC1 tokens to a principal
+async fn transfer_icrc1_to_principal(ledger_canister: Principal, to_principal: Principal, is_mint: bool) {
+    let fee = if is_mint {
         Some(Nat::from(0u64))
     } else {
         Some(Nat::from(NON_MINTER_FEE))
     };
 
-    ic_cdk::call::Call::bounded_wait(state.icrc1_ledger.canister_id, "icrc1_transfer")
+    ic_cdk::call::Call::bounded_wait(ledger_canister, "icrc1_transfer")
         .with_arg(Icrc1TransferArg {
             from_subaccount: None,
             to: Account {
@@ -89,37 +86,50 @@ async fn transfer_icrc1(to_principal: Principal) {
         .unwrap();
 }
 
-/// Transfers ICP tokens to the specified account identifier.
+/// Transfers ICRC1 tokens to the specified principal.
 #[ic_cdk::update]
-async fn transfer_icp(to_account_identifier: String) {
+async fn transfer_icrc1(to_principal: Principal) {
+    let state = STATE.with(|s| s.borrow().clone());
+    transfer_icrc1_to_principal(state.icrc1_ledger.canister_id, to_principal, state.icrc1_ledger.is_mint).await;
+}
+
+/// Transfers ICP tokens to the specified principal or account identifier.
+#[ic_cdk::update]
+async fn transfer_icp(to_identifier: String) {
     let state = STATE.with(|s| s.borrow().clone());
 
-    let account_identifier =
-        AccountIdentifier::from_hex(&to_account_identifier).expect("Invalid account identifier");
+    // Try to parse as Principal first
+    if let Ok(principal) = Principal::from_text(&to_identifier) {
+        // Use ICRC1 transfer for principal
+        transfer_icrc1_to_principal(state.icp_ledger.canister_id, principal, state.icp_ledger.is_mint).await;
+    } else if let Ok(account_identifier) = AccountIdentifier::from_hex(&to_identifier) {
+        // Use legacy ICP transfer for account identifier
+        let fee = if state.icp_ledger.is_mint {
+            Tokens::from_e8s(0u64)
+        } else {
+            Tokens::from_e8s(NON_MINTER_FEE)
+        };
 
-    let fee = if state.icp_ledger.is_mint {
-        Tokens::from_e8s(0u64)
+        let transfer_arg = IcpTransferArg {
+            to: account_identifier,
+            from_subaccount: None,
+            fee,
+            amount: Tokens::from_e8s(10_0000_0000u64),
+            created_at_time: None,
+            memo: Memo(0),
+        };
+
+        let result: Response =
+            ic_cdk::call::Call::bounded_wait(state.icp_ledger.canister_id, "transfer")
+                .with_arg(transfer_arg)
+                .await
+                .unwrap();
+
+        let result: Result<BlockIndex, TransferError> = result.candid().unwrap();
+        result.unwrap();
     } else {
-        Tokens::from_e8s(NON_MINTER_FEE)
-    };
-
-    let transfer_arg = IcpTransferArg {
-        to: account_identifier,
-        from_subaccount: None,
-        fee,
-        amount: Tokens::from_e8s(10_0000_0000u64),
-        created_at_time: None,
-        memo: Memo(0),
-    };
-
-    let result: Response =
-        ic_cdk::call::Call::bounded_wait(state.icp_ledger.canister_id, "transfer")
-            .with_arg(transfer_arg)
-            .await
-            .unwrap();
-
-    let result: Result<BlockIndex, TransferError> = result.candid().unwrap();
-    result.unwrap();
+        ic_cdk::trap(&format!("Invalid identifier format: {}. Expected either a Principal (e.g., rdmx6-jaaaa-aaaah-qcaiq-cai) or Account Identifier (e.g., d4685b31b51450508aff0d02b4f023b2a7d1f74b...)", to_identifier));
+    }
 }
 
 /// Serves frontend assets.
