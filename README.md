@@ -139,6 +139,7 @@ Which can be computed as:
    click "See all" in the "Performed calls" window on the bottom-right. For the "Test ICP Ledger", one such example is
     on 2025-06-26 (set this date as the "From" and "To" dates):
 
+```
 (
   record {
     to = record {
@@ -152,6 +153,7 @@ Which can be computed as:
     amount = 10_000_000_000 : nat;
   },
 )
+```
 
 4. Modify the above transfer arguments as needed. E.g., to mint enough for a faucet to give out 10 tokens
    (1_000_000_000) every second for the next 10 years (60*60*24*365*10=315360000), set the amount to
