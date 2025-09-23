@@ -25,7 +25,7 @@ const ICRC1_CONFIG: FaucetTestConfig = {
 
 test.describe('ICRC1 Faucet End-to-End Test', () => {
   test.beforeAll(async () => {
-    await setupFaucetTest(ICRC1_CONFIG);
+    await setupFaucetTest();
   });
 
   test('should request tokens and verify balance increase', async ({ page }) => {

@@ -9,6 +9,59 @@ const LedgerType = {
   ICRC1: 'ICRC1'
 };
 
+// Validation helpers
+const ValidationHelper = {
+  isValidPrincipal: (text) => {
+    try {
+      Principal.fromText(text);
+      return true;
+    } catch {
+      return false;
+    }
+  },
+  
+  isValidAccountIdentifier: (text) => {
+    // Account identifiers are 64-character hexadecimal strings
+    const hexPattern = /^[0-9a-fA-F]{64}$/;
+    return hexPattern.test(text);
+  },
+  
+  validateTESTICPInput: (text) => {
+    const trimmed = text.trim();
+    if (!trimmed) {
+      return { isValid: false, error: 'Please enter a Principal or Account Identifier.' };
+    }
+    
+    const isPrincipal = ValidationHelper.isValidPrincipal(trimmed);
+    const isAccountId = ValidationHelper.isValidAccountIdentifier(trimmed);
+    
+    if (isPrincipal || isAccountId) {
+      return { isValid: true, format: isPrincipal ? 'principal' : 'accountId' };
+    }
+    
+    return { 
+      isValid: false, 
+      error: 'Invalid format. Please enter a valid Principal or Account Identifier.' 
+    };
+  },
+  
+  validateTICRC1Input: (text) => {
+    const trimmed = text.trim();
+    if (!trimmed) {
+      return { isValid: false, error: 'Please enter a Principal.' };
+    }
+    
+    if (ValidationHelper.isValidPrincipal(trimmed)) {
+      return { isValid: true, format: 'principal' };
+    }
+    
+    return { 
+      isValid: false, 
+      error: 'Invalid Principal format. Please enter a valid Principal (e.g., rdmx6-jaaaa-aaaah-qcaiq-cai).' 
+    };
+  }
+};
+
 class App {
   constructor() {
     // State for token selection
@@ -68,9 +121,16 @@ class App {
     e.preventDefault();
     const inputValue = document.getElementById('recipient-input').value.trim();
     
-    if (!inputValue) {
-      const inputTypeLabel = this.selectedToken === 'TESTICP' ? 'Account Identifier' : 'Principal';
-      this.greeting = `Please enter a valid ${inputTypeLabel}.`;
+    // Frontend validation
+    let validation;
+    if (this.selectedToken === 'TESTICP') {
+      validation = ValidationHelper.validateTESTICPInput(inputValue);
+    } else if (this.selectedToken === 'TICRC1') {
+      validation = ValidationHelper.validateTICRC1Input(inputValue);
+    }
+    
+    if (!validation.isValid) {
+      this.greeting = validation.error;
       this.isError = true;
       this.isSuccess = false;
       this.#render();
@@ -91,7 +151,7 @@ class App {
         const principal = Principal.fromText(inputValue);
         result = await this.faucetBackend.transfer_icrc1(principal);
       } else if (this.selectedToken === 'TESTICP') {
-        // TESTICP always uses account identifier
+        // TESTICP accepts both principals and account identifiers
         result = await this.faucetBackend.transfer_icp(inputValue);
       }
 
@@ -101,8 +161,8 @@ class App {
       this.#triggerCoinAnimation();
     } catch (error) {
       console.error(error);
-      const inputTypeLabel = this.selectedToken === 'TESTICP' ? 'Account Identifier' : 'Principal';
-      this.greeting = `Error: Invalid ${inputTypeLabel} format. Please check and try again.`;
+      // If we reach here, it's likely a backend/network error since frontend validation passed
+      this.greeting = `Error: Failed to transfer tokens. ${error.message || 'Please try again later.'}`;
       this.isError = true;
       this.isSuccess = false;
     } finally {
@@ -113,7 +173,7 @@ class App {
 
   #render() {
     // Determine current input type and placeholder
-    const currentInputType = this.selectedToken === 'TESTICP' ? 'Account Identifier' : 'Principal';
+    const currentInputType = this.selectedToken === 'TESTICP' ? 'Principal or Account Identifier' : 'Principal';
     const currentPlaceholder = this.selectedToken === 'TESTICP' 
       ? 'e.g. d4685b31b51450508aff0d02b4f023b2a7d1f74b...'
       : 'e.g. rdmx6-jaaaa-aaaah-qcaiq-cai';

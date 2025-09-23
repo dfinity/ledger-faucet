@@ -56,15 +56,15 @@ export function startDfxBackground(): void {
 }
 
 // Common setup function for faucet tests
-export async function setupFaucetTest(config: FaucetTestConfig): Promise<void> {
+export async function setupFaucetTest(): Promise<void> {
   startDfxBackground();
   console.log('✅ dfx started successfully');
   
   // Wait a bit for dfx to be fully ready
   await new Promise(resolve => setTimeout(resolve, 10000));
   
-  console.log(`🚀 Deploying faucet with command: ${config.deployCommand}...`);
-  runCommand(config.deployCommand, true); // Show output in real-time
+  console.log('🚀 Deploying faucet with command: just deploy...');
+  runCommand('just deploy', true); // Show output in real-time
   console.log('✅ Deployment completed');
   
   // Wait a bit for services to be ready

@@ -118,6 +118,43 @@ else
     exit 1
 fi
 
+# Step 7: Test TESTICP with Principal
+echo -e "${YELLOW}💰 Testing TESTICP transfer with Principal ${TEST_PRINCIPAL}...${NC}"
+if dfx canister call faucet transfer_icp "(\"${TEST_PRINCIPAL}\")"; then
+    echo -e "${GREEN}✅ TESTICP tokens transferred to principal successfully${NC}"
+else
+    echo -e "${RED}❌ Failed to transfer TESTICP tokens to principal${NC}"
+    exit 1
+fi
+
 echo ""
-echo -e "${GREEN}🎉 Test completed successfully!${NC}"
+
+# Step 8: Check balance for principal-based TESTICP transfer
+echo -e "${YELLOW}🔍 Checking ICP balance for principal ${TEST_PRINCIPAL}...${NC}"
+if balance_result=$(dfx canister call testicp-ledger icrc1_balance_of "(record { owner = principal \"${TEST_PRINCIPAL}\"})"); then
+    echo -e "${GREEN}✅ Balance check successful${NC}"
+    echo "Balance result: ${balance_result}"
+    
+    # Expected balance
+    EXPECTED_BALANCE="1_000_000_000"
+    
+    # Extract the balance number from the result and verify it matches expected amount
+    if echo "${balance_result}" | grep -q "${EXPECTED_BALANCE}"; then
+        echo -e "${GREEN}✅ Balance matches expected amount (${EXPECTED_BALANCE}) - principal-based TESTICP transfer worked!${NC}"
+    else
+        echo -e "${RED}❌ Balance does not match expected amount${NC}"
+        echo -e "${RED}   Expected: ${EXPECTED_BALANCE}${NC}"
+        echo -e "${RED}   Got: ${balance_result}${NC}"
+        exit 1
+    fi
+else
+    echo -e "${RED}❌ Failed to check balance for principal${NC}"
+    exit 1
+fi
+
+echo ""
+echo -e "${GREEN}🎉 All tests completed successfully!${NC}"
+echo "✅ Account Identifier → TESTICP transfer: PASSED"
+echo "✅ Principal → TICRC1 transfer: PASSED" 
+echo "✅ Principal → TESTICP transfer: PASSED"
 echo "========================================" 
