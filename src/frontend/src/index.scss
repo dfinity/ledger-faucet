@@ -23,6 +23,15 @@ main {
   width: 90%;
 }
 
+.logo-header {
+  margin-bottom: 1rem;
+}
+
+.header-logo {
+  width: 80px;
+  height: auto;
+}
+
 h1 {
   color: #333;
   margin-bottom: 0.5rem;
@@ -33,13 +42,6 @@ p {
   color: #666;
   margin-bottom: 1.5rem;
   font-size: 1.1rem;
-}
-
-img {
-  max-width: 250px;
-  height: auto;
-  margin-top: 2rem;
-  margin-bottom: 0;
 }
 
 form {
@@ -141,39 +143,6 @@ button:disabled {
   color: #0f7b0f;
 }
 
-.info {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border: 1px solid #e9ecef;
-  text-align: left;
-}
-
-.info p {
-  margin-bottom: 0.5rem;
-  color: #333;
-  font-size: 1rem;
-}
-
-.info ul {
-  margin: 0;
-  padding-left: 1.5rem;
-  color: #666;
-}
-
-.info li {
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
-.info li:last-child {
-  margin-bottom: 0;
-}
-
-
-
 /* Coin Animation */
 .coin {
   position: fixed;
@@ -264,6 +233,86 @@ button:disabled {
   font-size: 0.85rem;
 }
 
+/* Footer Styling */
+.footer {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.footer-github {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.footer-canisters {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.footer-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: #666;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+}
+
+.footer-link:hover {
+  color: #29ABE2;
+  background: #f8f9ff;
+  transform: translateY(-1px);
+}
+
+.footer-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.github-icon {
+  color: #333;
+}
+
+.footer-link:hover .github-icon {
+  color: #29ABE2;
+}
+
+.dashboard-icon {
+  color: #666;
+}
+
+.footer-link:hover .dashboard-icon {
+  color: #29ABE2;
+}
+
+.hosted-by {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.hosted-link {
+  color: #666;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-style: italic;
+  transition: all 0.3s ease;
+}
+
+.hosted-link:hover {
+  color: #29ABE2;
+  text-decoration: underline;
+  transform: translateY(-1px);
+}
 
 @media (max-width: 600px) {
   main {
@@ -278,10 +327,6 @@ button:disabled {
   input[type="text"] {
     font-size: 16px; /* Prevents zoom on iOS */
   }
-  
-  .info {
-    padding: 1rem;
-  }
 
   .token-options {
     flex-direction: column;
@@ -291,5 +336,41 @@ button:disabled {
   .token-option {
     width: 100%;
     max-width: 250px;
+  }
+
+  .footer {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+  }
+
+  .footer-github {
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-canisters {
+    gap: 1rem;
+    flex-direction: column;
+  }
+
+  .footer-link {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .footer-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .header-logo {
+    width: 60px;
+  }
+
+  .hosted-by {
+    margin-top: 1.5rem;
+  }
+
+  .hosted-link {
+    font-size: 0.8rem;
   }
 }
