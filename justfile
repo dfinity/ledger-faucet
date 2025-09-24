@@ -4,8 +4,16 @@ build:
   cd src/frontend && npm install && npm run build
   cd ../..
 
-  # Build and compress backend.
   cargo build --target wasm32-unknown-unknown --release --features frontend
+
+  # Add canister metadata
+  cargo binstall ic-wasm --version 0.9.6 --root ./target
+  ./target/bin/ic-wasm \
+      "./target/wasm32-unknown-unknown/release/backend.wasm" \
+      -o "./target/wasm32-unknown-unknown/release/backend.wasm" \
+      metadata candid:service -f "./src/backend/backend.did" -v public
+
+  # Compress
   gzip -n -f "./target/wasm32-unknown-unknown/release/backend.wasm"
 
 # Deploy a specific token
