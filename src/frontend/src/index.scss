@@ -55,6 +55,10 @@
   --radius-md: 8px;
   --radius-lg: 12px;
   
+  /* Layout Widths */
+  --width-card: 520px;                                                    /* Main card container */
+  --width-form: calc(var(--width-card) - (var(--spacing-xl) * 2) - 16px); /* Form width
+  
   /* Shadows (updated for Figma blue) */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 12px rgba(19, 65, 208, 0.3);
@@ -124,7 +128,7 @@ main {
   border: 1.5px solid var(--color-border-light);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  max-width: 520px;
+  max-width: var(--width-card);
   width: 90%;
 }
 
@@ -153,7 +157,7 @@ p {
 form {
   margin: var(--spacing-2xl) 0;
   width: 100%;
-  max-width: 471px;
+  max-width: var(--width-form);
   margin-left: auto;
   margin-right: auto;
 }
@@ -168,13 +172,13 @@ label {
 }
 
 form label {
-  max-width: 471px;
+  max-width: var(--width-form);
   margin: 0 auto var(--spacing-lg) auto;
 }
 
 input[type="text"] {
   width: 100%;
-  max-width: 471px;
+  max-width: var(--width-form);
   padding: 14px;
   border: 1.5px solid var(--color-border-medium);
   border-radius: var(--radius-md);
@@ -239,7 +243,7 @@ button:disabled {
   background: var(--color-bg-light);
   border: 1px solid var(--color-border-light);
   width: 100%;
-  max-width: 471px;
+  max-width: var(--width-form);
   margin-left: auto;
   margin-right: auto;
   box-sizing: border-box;
@@ -293,7 +297,7 @@ button:disabled {
 .token-selection {
   margin: var(--spacing-2xl) 0;
   width: 100%;
-  max-width: 471px;
+  max-width: var(--width-form);
   margin-left: auto;
   margin-right: auto;
 }
@@ -369,7 +373,7 @@ button:disabled {
   padding-top: var(--spacing-xl);
   border-top: 1px solid var(--color-border-light);
   width: 100%;
-  max-width: 471px;
+  max-width: var(--width-form);
   margin-left: auto;
   margin-right: auto;
 }
