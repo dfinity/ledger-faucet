@@ -1,6 +1,7 @@
 import { html, render } from 'lit-html';
 import { createActor } from 'declarations/faucet';
-import logo from '../assets/logo.svg';
+import icpLogo from '../assets/icp-logo.svg';
+import infinityLogo from '../assets/logo.svg';
 import { Principal } from '@dfinity/principal';
 
 // Enum for ledger types
@@ -179,10 +180,11 @@ class App {
       : 'e.g. rdmx6-jaaaa-aaaah-qcaiq-cai';
 
     let body = html`
+      <div class="logo-header">
+        <img src="${icpLogo}" alt="ICP Logo" class="header-logo" />
+      </div>
+      
       <main>
-        <div class="logo-header">
-          <img src="${logo}" alt="Internet Computer Logo" class="header-logo" />
-        </div>
         <h1>Test Token Faucet</h1>
         <p>Get 10 test tokens for development and testing</p>
         
@@ -264,13 +266,13 @@ class App {
             </a>
           </div>
         </footer>
-        
-        <div class="hosted-by">
-          <a href="https://dashboard.internetcomputer.org/canister/nqoci-rqaaa-aaaap-qp53q-cai" target="_blank" rel="noopener noreferrer" class="hosted-link">
-            Proudly hosted on the Internet Computer
-          </a>
-        </div>
       </main>
+      
+      <div class="hosted-by">
+        <a href="https://dashboard.internetcomputer.org/canister/nqoci-rqaaa-aaaap-qp53q-cai" target="_blank" rel="noopener noreferrer" class="hosted-link">
+          Proudly hosted on the <img src="${infinityLogo}" alt="Internet Computer" class="hosted-logo" /> Internet Computer
+        </a>
+      </div>
     `;
     render(body, document.getElementById('root'));
     document
