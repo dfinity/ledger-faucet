@@ -1,6 +1,7 @@
 import { html, render } from 'lit-html';
 import { createActor } from 'declarations/faucet';
-import logo from '../assets/logo.svg';
+import icpLogo from '../assets/icp-logo.svg';
+import infinityLogo from '../assets/logo.svg';
 import { Principal } from '@dfinity/principal';
 
 // Enum for ledger types
@@ -180,7 +181,7 @@ class App {
 
     let body = html`
       <div class="logo-header">
-        <img src="${logo}" alt="Internet Computer Logo" class="header-logo" />
+        <img src="${icpLogo}" alt="ICP Logo" class="header-logo" />
       </div>
       
       <main>
@@ -269,7 +270,7 @@ class App {
       
       <div class="hosted-by">
         <a href="https://dashboard.internetcomputer.org/canister/nqoci-rqaaa-aaaap-qp53q-cai" target="_blank" rel="noopener noreferrer" class="hosted-link">
-          Proudly hosted on the Internet Computer
+          Proudly hosted on the <img src="${infinityLogo}" alt="Internet Computer" class="hosted-logo" /> Internet Computer
         </a>
       </div>
     `;

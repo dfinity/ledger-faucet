@@ -71,13 +71,19 @@
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   --font-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   
-  --font-size-xs: 0.8rem;    /* 12.8px */
-  --font-size-sm: 0.85rem;   /* 13.6px */
-  --font-size-md: 0.9rem;    /* 14.4px */
-  --font-size-base: 1rem;    /* 16px */
-  --font-size-lg: 1.1rem;    /* 17.6px */
-  --font-size-xl: 1.5rem;    /* 24px */
-  --font-size-2xl: 2rem;     /* 32px */
+  /* Font Sizes - Semantic */
+  --font-size-xs: 11px;      /* Extra small - mobile token descriptions */
+  --font-size-sm: 12px;      /* Small - mobile footer, subtle text */
+  --font-size-md: 13px;      /* Medium - mobile token labels */
+  --font-size-base: 14px;    /* Base - labels, buttons, body text, inputs */
+  --font-size-lg: 16px;      /* Large - emphasized text */
+  --font-size-xl: 24px;      /* Extra large - headings */
+  --font-size-2xl: 32px;     /* 2X large - hero text */
+  
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
   
   /* Z-index Scale */
   --z-base: 1;
@@ -95,20 +101,20 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
-  padding: 0;
+  padding: var(--spacing-lg);
   background: linear-gradient(135deg, var(--color-bg-gradient-start) 0%, var(--color-bg-gradient-end) 100%);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-xl);
-  padding: var(--spacing-2xl) var(--spacing-lg);
+  position: relative;
+  box-sizing: border-box;
 }
 
 .logo-header {
   text-align: center;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
 }
 
 main {
@@ -123,15 +129,15 @@ main {
 }
 
 .header-logo {
-  width: 80px;
-  height: auto;
+  height: 64px;
+  width: auto;
 }
 
 h1 {
   color: var(--color-text-primary);
   margin-bottom: 0;
-  font-size: 24px;
-  font-weight: 500;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
   line-height: 32px;
 }
 
@@ -139,7 +145,8 @@ p {
   color: var(--color-text-secondary);
   margin-top: var(--spacing-lg);
   margin-bottom: 0;
-  font-size: 14px;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
   line-height: normal;
 }
 
@@ -154,10 +161,10 @@ form {
 label {
   display: block;
   margin-bottom: var(--spacing-lg);
-  font-weight: 400;
+  font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   text-align: left;
-  font-size: 14px;
+  font-size: var(--font-size-base);
 }
 
 form label {
@@ -199,8 +206,8 @@ button {
   color: var(--color-text-white);
   border: none;
   border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 700;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
   cursor: pointer;
   transition: all var(--transition-normal);
   margin-top: var(--spacing-xl);
@@ -222,10 +229,10 @@ button:disabled {
 
 #message {
   margin-top: var(--spacing-xl);
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md) var(--spacing-lg);
   border-radius: var(--radius-sm);
-  font-weight: 500;
-  min-height: 50px;
+  font-weight: var(--font-weight-medium);
+  min-height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -289,8 +296,10 @@ button:disabled {
 .token-selection h3 {
   margin-bottom: var(--spacing-lg);
   color: var(--color-text-primary);
-  font-size: var(--font-size-lg);
-  font-weight: 600;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  text-align: left;
+  line-height: normal;
 }
 
 .token-options {
@@ -304,13 +313,14 @@ button:disabled {
   display: flex;
   align-items: center;
   padding: 18px;
+  margin: 0;
   border: 1.5px solid var(--color-border-light);
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all var(--transition-normal);
   background: var(--color-bg-white);
-  min-width: 156px;
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .token-option:hover {
@@ -335,16 +345,16 @@ button:disabled {
 .token-label strong {
   display: block;
   color: var(--color-text-primary);
-  font-size: 14px;
-  font-weight: 700;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
   margin-bottom: 4px;
   line-height: normal;
 }
 
 .token-label small {
   color: var(--color-text-secondary);
-  font-size: 12px;
-  font-weight: 400;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
   line-height: normal;
 }
 
@@ -380,8 +390,8 @@ button:disabled {
   gap: 8px;
   text-decoration: none;
   color: var(--color-text-secondary);
-  font-size: 14px;
-  font-weight: 400;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
   line-height: normal;
   transition: all var(--transition-normal);
   padding: 8px 12px;
@@ -418,22 +428,45 @@ button:disabled {
 
 .hosted-by {
   text-align: center;
-  margin-top: 0;
+  margin-top: var(--spacing-2xl);
+  padding: var(--spacing-lg);
+  background: transparent;
+}
+
+/* Only fix to bottom on tall desktop screens */
+@media (min-width: 601px) and (min-height: 800px) {
+  .hosted-by {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-top: 0;
+  }
 }
 
 .hosted-link {
   color: var(--color-text-secondary);
   text-decoration: none;
-  font-size: 14px;
-  font-weight: 400;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
   font-style: italic;
   line-height: normal;
   transition: all var(--transition-normal);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .hosted-link:hover {
   color: var(--color-primary);
   text-decoration: underline;
+}
+
+.hosted-logo {
+  height: 16px;
+  width: auto;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /* ===================================
@@ -452,19 +485,24 @@ button:disabled {
   h1 {
     font-size: var(--font-size-xl);
   }
-  
-  input[type="text"] {
-    font-size: 16px; /* Prevents zoom on iOS */
-  }
 
   .token-options {
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    gap: var(--spacing-sm);
   }
 
   .token-option {
-    width: 100%;
-    max-width: 250px;
+    flex: 1;
+    min-width: 0;
+    padding: 14px 8px;
+  }
+  
+  .token-label strong {
+    font-size: var(--font-size-md);
+  }
+  
+  .token-label small {
+    font-size: var(--font-size-xs);
   }
 
   .footer {
@@ -492,10 +530,14 @@ button:disabled {
   }
 
   .header-logo {
-    width: 60px;
+    height: 56px;
   }
 
   .hosted-link {
-    font-size: 12px;
+    font-size: var(--font-size-sm);
+  }
+
+  .hosted-logo {
+    height: 14px;
   }
 }
