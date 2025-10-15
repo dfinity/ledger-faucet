@@ -7,7 +7,7 @@ build:
   cargo build --target wasm32-unknown-unknown --release --features frontend
 
   # Add canister metadata
-  cargo binstall ic-wasm --version 0.9.6 --root ./target
+  cargo install ic-wasm --version 0.9.8 --root ./target
   ./target/bin/ic-wasm \
       "./target/wasm32-unknown-unknown/release/backend.wasm" \
       -o "./target/wasm32-unknown-unknown/release/backend.wasm" \
