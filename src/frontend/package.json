@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "VITE_TOKEN_SYMBOL=TICRC1 vite --port 3000",
+    "start": "CANISTER_ID_FAUCET=nqoci-rqaaa-aaaap-qp53q-cai vite --port 3000",
     "prebuild": "dfx generate faucet",
     "build": "CANISTER_ID_FAUCET=nqoci-rqaaa-aaaap-qp53q-cai vite build --outDir dist",
     "format": "prettier --write \"src/**/*.{json,js,jsx,ts,tsx,css,scss}\""
