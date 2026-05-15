@@ -10,7 +10,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 candid = "0.10"
-ic-asset-certification = "3.0.3"
+ic-asset-certification = "3.2.0"
 ic-cdk = "0.18.7"
 ic-http-certification = "3.2.0"
 ic-ledger-types = "0.15.0"

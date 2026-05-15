@@ -316,9 +316,9 @@ dependencies = [
 
 [[package]]
 name = "ic-asset-certification"
-version = "3.0.3"
+version = "3.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c43805022a5e4f408de44ca26396128697a2c39f83f4fdaf33f8aa3ac653d78e"
+checksum = "7103d40be94c91d33021066b9fc589c01ffdb171e76cf8789ab1abcc0acecd8c"
 dependencies = [
  "globset",
  "http",
