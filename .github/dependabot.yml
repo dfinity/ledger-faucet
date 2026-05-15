@@ -14,8 +14,3 @@ updates:
     directory: /tests/frontend
     schedule:
       interval: weekly
-
-  - package-ecosystem: github-actions
-    directory: /
-    schedule:
-      interval: weekly
