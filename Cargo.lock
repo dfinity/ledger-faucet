@@ -445,15 +445,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ic-stable-structures"
-version = "0.6.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4d30d4cf17aff1024e13133897048bcba580e063c9000571ab766ca37e2996f4"
-dependencies = [
- "ic_principal",
-]
-
-[[package]]
 name = "ic0"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -486,17 +477,15 @@ dependencies = [
 
 [[package]]
 name = "icrc-ledger-types"
-version = "0.1.10"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "87c31beeee0e5ab964861a3d5ea2b5ed7b688b2b22400367a832b1fcf0db1fa4"
+checksum = "a11c866a01b93ef6bd0e3dc01374df41bc70a8b79027a2fd120543a094668978"
 dependencies = [
  "base32",
  "candid",
  "crc32fast",
  "hex",
- "ic-stable-structures",
  "icrc-cbor",
- "itertools",
  "minicbor",
  "num-bigint",
  "num-traits",
@@ -531,15 +520,6 @@ checksum = "7cab85a7ed0bd5f0e76d93846e0147172bed2e2d3f859bcc33a8d9699cad1a75"
 dependencies = [
  "proc-macro2",
  "quote",
-]
-
-[[package]]
-name = "itertools"
-version = "0.12.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ba291022dbbd398a455acf126c1e341954079855bc60dfdda641363bd6922569"
-dependencies = [
- "either",
 ]
 
 [[package]]
