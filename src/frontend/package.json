@@ -10,7 +10,7 @@
     "format": "prettier --write \"src/**/*.{json,js,jsx,ts,tsx,css,scss}\""
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
+    "@types/node": "^25.9.1",
     "dotenv": "^17.4.2",
     "sass": "^1.63.6",
     "typescript": "^6.0.3",
