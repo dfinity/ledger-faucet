@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@dfinity/agent": "^2.1.3",
-    "@dfinity/candid": "^2.1.3",
+    "@dfinity/candid": "^3.4.3",
     "@dfinity/principal": "^2.1.3",
     "lit-html": "^2.8.0"
   }
