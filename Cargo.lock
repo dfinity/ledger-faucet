@@ -42,7 +42,7 @@ dependencies = [
  "candid",
  "ic-asset-certification",
  "ic-cdk",
- "ic-http-certification",
+ "ic-http-certification 3.2.0",
  "ic-ledger-types",
  "icrc-ledger-types",
  "include_dir",
@@ -328,14 +328,14 @@ dependencies = [
 
 [[package]]
 name = "ic-asset-certification"
-version = "3.2.0"
+version = "4.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7103d40be94c91d33021066b9fc589c01ffdb171e76cf8789ab1abcc0acecd8c"
+checksum = "aa0067caafa352d6490bb3452c209352bb654ff59a0f27588a2ce793b56242d4"
 dependencies = [
  "globset",
  "http",
- "ic-certification",
- "ic-http-certification",
+ "ic-certification 4.0.0",
+ "ic-http-certification 4.0.0",
  "thiserror 1.0.69",
 ]
 
@@ -393,6 +393,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "ic-certification"
+version = "4.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9d58eda9bd0b012356ff1bd00d95cb25ea0235699f5475c288b2b6bbe68225cd"
+dependencies = [
+ "hex",
+ "serde",
+ "serde_bytes",
+ "sha2",
+]
+
+[[package]]
 name = "ic-error-types"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -412,8 +424,25 @@ dependencies = [
  "base64",
  "candid",
  "http",
- "ic-certification",
- "ic-representation-independent-hash",
+ "ic-certification 3.2.0",
+ "ic-representation-independent-hash 3.2.0",
+ "serde",
+ "serde_cbor",
+ "thiserror 1.0.69",
+ "urlencoding",
+]
+
+[[package]]
+name = "ic-http-certification"
+version = "4.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "684547ccb1e63ee98d5b4dd049a960e25f0269f37cc499cb8cf543906bcc654a"
+dependencies = [
+ "base64",
+ "candid",
+ "http",
+ "ic-certification 4.0.0",
+ "ic-representation-independent-hash 4.0.0",
  "serde",
  "serde_cbor",
  "thiserror 1.0.69",
@@ -451,6 +480,16 @@ name = "ic-representation-independent-hash"
 version = "3.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c80c46e399bcce51c531237e1111ced114dec295cff22b0996099a6168814b03"
+dependencies = [
+ "leb128",
+ "sha2",
+]
+
+[[package]]
+name = "ic-representation-independent-hash"
+version = "4.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dde786bd0028cffae22d059b982b97f3adaab9961146229d0a091feba142d4a2"
 dependencies = [
  "leb128",
  "sha2",
