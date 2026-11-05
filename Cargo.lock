@@ -42,7 +42,7 @@ dependencies = [
  "candid",
  "ic-asset-certification",
  "ic-cdk",
- "ic-http-certification",
+ "ic-http-certification 4.0.1",
  "ic-ledger-types",
  "icrc-ledger-types",
  "include_dir",
@@ -334,8 +334,8 @@ checksum = "7103d40be94c91d33021066b9fc589c01ffdb171e76cf8789ab1abcc0acecd8c"
 dependencies = [
  "globset",
  "http",
- "ic-certification",
- "ic-http-certification",
+ "ic-certification 3.2.0",
+ "ic-http-certification 3.2.0",
  "thiserror 1.0.69",
 ]
 
@@ -393,6 +393,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "ic-certification"
+version = "4.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d41cabeea5bd5004599c306e77cca0c64c44d8a74416fdae54ea6262da804b19"
+dependencies = [
+ "hex",
+ "serde",
+ "serde_bytes",
+ "sha2",
+]
+
+[[package]]
 name = "ic-error-types"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -412,8 +424,25 @@ dependencies = [
  "base64",
  "candid",
  "http",
- "ic-certification",
- "ic-representation-independent-hash",
+ "ic-certification 3.2.0",
+ "ic-representation-independent-hash 3.2.0",
+ "serde",
+ "serde_cbor",
+ "thiserror 1.0.69",
+ "urlencoding",
+]
+
+[[package]]
+name = "ic-http-certification"
+version = "4.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3355e972897cf7a0c2a40321ed9d0dc48d8848f620335bec383dc8b8a4c32a02"
+dependencies = [
+ "base64",
+ "candid",
+ "http",
+ "ic-certification 4.0.1",
+ "ic-representation-independent-hash 4.0.1",
  "serde",
  "serde_cbor",
  "thiserror 1.0.69",
@@ -451,6 +480,16 @@ name = "ic-representation-independent-hash"
 version = "3.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c80c46e399bcce51c531237e1111ced114dec295cff22b0996099a6168814b03"
+dependencies = [
+ "leb128",
+ "sha2",
+]
+
+[[package]]
+name = "ic-representation-independent-hash"
+version = "4.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f9a1247872c2a3945e4b836bd582bc84ad8908b625cc729f3ff1fe8491167a07"
 dependencies = [
  "leb128",
  "sha2",
